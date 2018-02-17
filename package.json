@@ -4,6 +4,7 @@
   "description": "CLI for adding flags to OpenAQ data",
   "main": "index.js",
   "scripts": {
+    "main": "./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

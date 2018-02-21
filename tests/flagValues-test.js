@@ -1,7 +1,18 @@
-import test from 'ava';
+const test = require('ava');
+
+const {Flagger, ArgumentError} = require('../lib/flagger');
 
 // describe 'flagger#init'
-test.todo('requires an array of measurements');
+test('requires a data property', t => {
+  const error = t.throws(() => new Flagger(), ArgumentError);
+  t.is(error.message, 'Missing required argument data.');
+});
+
+test('requires data property to be an array', t => {
+  const error = t.throws(() => new Flagger({data: 'not an array'}), TypeError);
+  t.is(error.message, 'data is not required type Array.');
+});
+
 test.todo('requires a flag string')
 test.todo('requires a type')
 

@@ -1,6 +1,11 @@
 const test = require('ava');
 
-const {Flagger, ArgumentError} = require('../lib/flagger');
+const { Flagger, ArgumentError } = require('../lib/flagger');
+
+const commonProperties = {
+  data: [],
+  flag: 'F'
+};
 
 // describe 'flagger#init'
 test('requires a data property', t => {
@@ -24,26 +29,25 @@ test('requires flag property to be a string', t => {
 });
 
 test('requires a type', t => {
-  const error = t.throws(() => new Flagger({data: [], flag: '1'}), ArgumentError);
+  const error = t.throws(() => new Flagger(commonProperties), ArgumentError);
   t.is(error.message, 'Missing required argument type.');
 });
 
 test('requires type to be one of string, set, or array', t => {
-  const error = t.throws(() => new Flagger({data: [], flag: '1', type: 'cupcake'}), TypeError);
+  const error = t.throws(() => new Flagger({...commonProperties, type: 'cupcake'}), TypeError);
   t.is(error.message, 'type is not one of exact, set, range.');
 });
 
 // describe 'exact' type
 // init
 test('requires a value', t => {
-  const error = t.throws(() => new Flagger({data: [], flag: '1', type: 'exact'}), ArgumentError);
+  const error = t.throws(() => new Flagger({...commonProperties, type: 'exact'}), ArgumentError);
   t.is(error.message, 'Missing required argument value.');
 });
 
 test('requires value to be a number', t => {
   const flaggerProperties = {
-    data: [],
-    flag: '1',
+    ...commonProperties,
     type: 'exact',
     value: '1'
   };
@@ -53,13 +57,12 @@ test('requires value to be a number', t => {
 
 test('sets properties when valid', t => {
   const flaggerProperties = {
-    data: [],
-    flag: '1',
+    ...commonProperties,
     type: 'exact',
     value: 1
   };
   const flagger = new Flagger(flaggerProperties);
-  t.is(flagger.config.flag, '1');
+  t.is(flagger.config.flag, commonProperties.flag);
   t.is(flagger.config.type, 'exact');
   t.is(flagger.config.value, 1);
 });
@@ -77,8 +80,7 @@ test('requires values property', t => {
 
 test('requires values to be an Array', t => {
   const flaggerProperties = {
-    data: [],
-    flag: '1',
+    ...commonProperties,
     type: 'set',
     values: '1'
   };
@@ -92,10 +94,6 @@ test.todo('does not flag values which are not in the set')
 
 // describe 'range' type
 // init
-const commonProperties = {
-  data: [],
-  flag: 'F'
-};
 const rangeFlaggerProperties = { ...commonProperties, type: 'range' };
 
 test('requires a start object', t => {

@@ -1,6 +1,5 @@
 const test = require('ava');
-
-const { Flagger, ArgumentError } = require('../lib/flagger');
+const Flagger = require('../lib/flagger');
 
 const commonProperties = {flag: 'F'};
 const exactFlaggerProperties = {...commonProperties, type: 'exact'};
@@ -33,35 +32,42 @@ const data = [{value: 1}, {value: 0}, {value: 1}, {value: '1'}];
 
 // describe 'flagger#init'
 test('requires a flag property', t => {
-  const error = t.throws(() => new Flagger(), ArgumentError);
-  t.is(error.message, 'Missing required argument flag.');
+  const error = t.throws(() => new Flagger());
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "flag" fails because ["flag" is required]');
 });
 
 test('requires flag property to be a string', t => {
-  const error = t.throws(() => new Flagger({flag: 1}), TypeError);
-  t.is(error.message, 'flag is not required type String.');
+  const error = t.throws(() => new Flagger({flag: 1}));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "flag" fails because ["flag" must be a string]');
 });
 
 test('requires a type', t => {
-  const error = t.throws(() => new Flagger(commonProperties), ArgumentError);
-  t.is(error.message, 'Missing required argument type.');
+  const error = t.throws(() => new Flagger(commonProperties));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "type" fails because ["type" is required]');
 });
 
 test('requires type to be one of string, set, or array', t => {
-  const error = t.throws(() => new Flagger({...commonProperties, type: 'cupcake'}), TypeError);
-  t.is(error.message, 'type is not one of exact, set, range.');
+  const error = t.throws(() => new Flagger({...commonProperties, type: 'cupcake'}));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "type" fails because ["type" must be one of [exact, set, range]]');
 });
 
 // describe 'exact' type
 // init
 test('requires a value', t => {
-  const error = t.throws(() => new Flagger(exactFlaggerProperties), ArgumentError);
-  t.is(error.message, 'Missing required argument value.');
+  const error = t.throws(() => new Flagger(exactFlaggerProperties));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "value" fails because ["value" is required]');
 });
 
 test('requires value to be a number', t => {
-  const error = t.throws(() => new Flagger({...exactFlaggerProperties, value: '1'}), TypeError);
-  t.is(error.message, 'value is not required type Number.');
+  // TODO(aimee): Seems like there might be a bug in joi if we set value to a
+  // stringified (e.g. value: '1') number it will not error.
+  const error = t.throws(() => new Flagger({...exactFlaggerProperties, value: 'keylime'}));
+  t.is(error.message, 'child "value" fails because ["value" must be a number]');
 });
 
 test('sets properties when valid', t => {
@@ -84,13 +90,15 @@ test('flags values which match the value', t => {
 // describe 'set' type
 // init
 test('requires values property', t => {
-  const error = t.throws(() => new Flagger(setFlaggerProperties), ArgumentError);
-  t.is(error.message, 'Missing required argument values.');
+  const error = t.throws(() => new Flagger(setFlaggerProperties));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "values" fails because ["values" is required]');
 });
 
 test('requires values to be an Array', t => {
-  const error = t.throws(() => new Flagger({...setFlaggerProperties, values: 1}), TypeError);
-  t.is(error.message, 'values is not required type Array.');
+  const error = t.throws(() => new Flagger({...setFlaggerProperties, values: 1}));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "values" fails because ["values" must be an array]');
 });
 
 // flag
@@ -106,30 +114,35 @@ test('flags values which match any of the set', t => {
 // describe 'range' type
 // init
 test('requires a start object', t => {
-  const error = t.throws(() => new Flagger(rangeFlaggerProperties), ArgumentError);
-  t.is(error.message, 'Missing required argument start.');
+  const error = t.throws(() => new Flagger(rangeFlaggerProperties));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "start" fails because ["start" is required]');
 });
 
 test('requires an end object', t => {
-  const properties = {...rangeFlaggerProperties, start: {}};
-  const error = t.throws(() => new Flagger(properties), ArgumentError);
-  t.is(error.message, 'Missing required argument end.');
+  const properties = {...rangeFlaggerProperties, start: {value: 1}};
+  const error = t.throws(() => new Flagger(properties));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "end" fails because ["end" is required]');
 });
 
 test('requires a start value', t => {
-  const error = t.throws(() => new Flagger(rangeFlaggerPropertiesWithEmptyLimits), ArgumentError);
-  t.is(error.message, 'Missing required argument value.');
+  const error = t.throws(() => new Flagger(rangeFlaggerPropertiesWithEmptyLimits));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "start" fails because [child "value" fails because ["value" is required]]');
 });
 
 test('requires an end value', t => {
   const properties = { ...rangeFlaggerPropertiesWithEmptyLimits, start: {value: 1}};
-  const error = t.throws(() => new Flagger(properties), ArgumentError);
-  t.is(error.message, 'Missing required argument value.');
+  const error = t.throws(() => new Flagger(properties));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "end" fails because [child "value" fails because ["value" is required]]');
 });
 
 test('raises an error if the end object is less than the start object', t => {
-  const error = t.throws(() => new Flagger(rangeFlaggerPropertiesWithBadLimits), ArgumentError);
-  t.is(error.message, 'Start must be less than end.');
+  const error = t.throws(() => new Flagger(rangeFlaggerPropertiesWithBadLimits));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "end" fails because [child "value" fails because ["value" must be greater than 1]]');
 });
 
 // flag

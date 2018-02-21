@@ -24,4 +24,3 @@ cat examples/simple.json | ./index.js
 # or
 ./index.js --infile examples/simple.json
 ```
-

@@ -12,7 +12,7 @@
     "url": "git+https://github.com/openaq/openaq-quality-check.git"
   },
   "author": "Aimee Barciauskas",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/openaq/openaq-quality-check/issues"
   },

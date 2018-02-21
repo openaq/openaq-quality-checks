@@ -13,7 +13,16 @@ test('requires data property to be an array', t => {
   t.is(error.message, 'data is not required type Array.');
 });
 
-test.todo('requires a flag string')
+test('requires a flag property', t => {
+  const error = t.throws(() => new Flagger({data: []}), ArgumentError);
+  t.is(error.message, 'Missing required argument flag.');
+});
+
+test('requires flag property to be a string', t => {
+  const error = t.throws(() => new Flagger({data: [], flag: 1}), TypeError);
+  t.is(error.message, 'flag is not required type String.');
+});
+
 test.todo('requires a type')
 
 // describe 'exact' type

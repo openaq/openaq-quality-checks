@@ -92,9 +92,54 @@ test.todo('does not flag values which are not in the set')
 
 // describe 'range' type
 // init
-test.todo('requires a start object')
-test.todo('requires an end object')
-test.todo('raises an error if the end object is less than the start object')
+const commonProperties = {
+  data: [],
+  flag: 'F'
+};
+const rangeFlaggerProperties = { ...commonProperties, type: 'range' };
+
+test('requires a start object', t => {
+  const error = t.throws(() => new Flagger(rangeFlaggerProperties), ArgumentError);
+  t.is(error.message, 'Missing required argument start.');
+});
+
+test('requires an end object', t => {
+  const properties = { ...rangeFlaggerProperties, start: {} };
+  const error = t.throws(() => new Flagger(properties), ArgumentError);
+  t.is(error.message, 'Missing required argument end.');
+});
+
+const rangeFlaggerPropertiesWithEnds = { 
+  ...rangeFlaggerProperties,
+  start: {},
+  end: {}
+};
+
+test('requires a start value', t => {
+  const error = t.throws(() => new Flagger(rangeFlaggerPropertiesWithEnds), ArgumentError);
+  t.is(error.message, 'Missing required argument value.');
+});
+
+test('requires an end value', t => {
+  const properties = { ...rangeFlaggerPropertiesWithEnds, start: {value: 1}};
+  const error = t.throws(() => new Flagger(properties), ArgumentError);
+  t.is(error.message, 'Missing required argument value.');
+});
+
+test('raises an error if the end object is less than the start object', t => {
+  const properties = {
+    ...rangeFlaggerPropertiesWithEnds,
+    start: {
+      value: 1
+    },
+    end: {
+      value: 0
+    }
+  };
+  const error = t.throws(() => new Flagger(properties), ArgumentError);
+  t.is(error.message, 'Start must be less than end.');
+});
+
 // flag
 test.todo('flags values inclusively')
 test.todo('flags values exclusively')

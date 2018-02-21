@@ -6,10 +6,28 @@ const commonProperties = {flag: 'F'};
 const exactFlaggerProperties = {...commonProperties, type: 'exact'};
 const setFlaggerProperties = {...commonProperties, type: 'set'};
 const rangeFlaggerProperties = { ...commonProperties, type: 'range' };
-const rangeFlaggerPropertiesWithEnds = { 
+const rangeFlaggerPropertiesWithEmptyLimits = { 
   ...rangeFlaggerProperties,
   start: {},
   end: {}
+};
+const rangeFlaggerPropertiesWithBadLimits = {
+  ...rangeFlaggerProperties,
+  start: {
+    value: 1
+  },
+  end: {
+    value: 0
+  }
+};
+const rangeFlaggerPropertiesWithGoodLimits = {
+  ...rangeFlaggerProperties,
+  start: {
+    value: 0
+  },
+  end: {
+    value: 1
+  }
 };
 const data = [{value: 1}, {value: 0}, {value: 1}, {value: '1'}];
 
@@ -76,8 +94,14 @@ test('requires values to be an Array', t => {
 });
 
 // flag
-test.todo('flags values which match any of the set')
-test.todo('does not flag values which are not in the set')
+test('flags values which match any of the set', t => {
+  const flagger = new Flagger({...setFlaggerProperties, values: [1, '1']});
+  const flaggedData = flagger.flag(data);
+  t.deepEqual(flaggedData[0].flags[0], {flag: 'F'});
+  t.is(flaggedData[1].flags, undefined);
+  t.deepEqual(flaggedData[2].flags[0], {flag: 'F'});
+  t.deepEqual(flaggedData[3].flags[0], {flag: 'F'});
+});
 
 // describe 'range' type
 // init
@@ -93,32 +117,31 @@ test('requires an end object', t => {
 });
 
 test('requires a start value', t => {
-  const error = t.throws(() => new Flagger(rangeFlaggerPropertiesWithEnds), ArgumentError);
+  const error = t.throws(() => new Flagger(rangeFlaggerPropertiesWithEmptyLimits), ArgumentError);
   t.is(error.message, 'Missing required argument value.');
 });
 
 test('requires an end value', t => {
-  const properties = { ...rangeFlaggerPropertiesWithEnds, start: {value: 1}};
+  const properties = { ...rangeFlaggerPropertiesWithEmptyLimits, start: {value: 1}};
   const error = t.throws(() => new Flagger(properties), ArgumentError);
   t.is(error.message, 'Missing required argument value.');
 });
 
 test('raises an error if the end object is less than the start object', t => {
-  const properties = {
-    ...rangeFlaggerPropertiesWithEnds,
-    start: {
-      value: 1
-    },
-    end: {
-      value: 0
-    }
-  };
-  const error = t.throws(() => new Flagger(properties), ArgumentError);
+  const error = t.throws(() => new Flagger(rangeFlaggerPropertiesWithBadLimits), ArgumentError);
   t.is(error.message, 'Start must be less than end.');
 });
 
 // flag
-test.todo('flags values inclusively')
+test('flags values inclusively by default', t => {
+  const flagger = new Flagger(rangeFlaggerPropertiesWithGoodLimits);
+  const flaggedData = flagger.flag(data);
+  t.deepEqual(flaggedData[0].flags[0], {flag: 'F'});
+  t.deepEqual(flaggedData[1].flags[0], {flag: 'F'});
+  t.deepEqual(flaggedData[2].flags[0], {flag: 'F'});
+  t.is(flaggedData[3].flags, undefined);  
+});
+
 test.todo('flags values exclusively')
 test.todo('does not flag values which are not in range, inclusively')
 test.todo('does not flag values which are not in range, exclusively')

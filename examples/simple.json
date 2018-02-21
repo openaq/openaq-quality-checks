@@ -1,0 +1,11 @@
+{
+  "meta": {
+    "name": "openaq-api"
+  },
+  "results": [
+    {
+      "location": "Maharashtra Pollution Control Board - Solapur",
+      "value": -999
+    }
+  ]
+}

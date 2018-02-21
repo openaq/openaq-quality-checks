@@ -12,7 +12,16 @@ Have an OpenAQ data quality concern or experience you would like to share? Pleas
 
 ### Setup
 
-```
+```bash
 nvm use
 yarn install
 ```
+
+### Example Usage
+
+```bash
+cat examples/simple.json | ./index.js
+# or
+./index.js --infile examples/simple.json
+```
+

@@ -142,6 +142,34 @@ test('flags values inclusively by default', t => {
   t.is(flaggedData[3].flags, undefined);  
 });
 
-test.todo('flags values exclusively')
-test.todo('does not flag values which are not in range, inclusively')
-test.todo('does not flag values which are not in range, exclusively')
+test('flags values exclusively using the end endpoint', t => {
+  const properties = {
+    ...rangeFlaggerPropertiesWithGoodLimits,
+    end: {
+      value: 1,
+      exclusive: true // don't flag 1's
+    }
+  }
+  const flagger = new Flagger(properties);
+  const flaggedData = flagger.flag(data);
+  t.is(flaggedData[0].flags, undefined);
+  t.deepEqual(flaggedData[1].flags[0], {flag: 'F'});
+  t.is(flaggedData[2].flags, undefined);
+  t.is(flaggedData[3].flags, undefined);
+});
+
+test('flags values exclusively using the start endpoint', t => {
+  const properties = {
+    ...rangeFlaggerPropertiesWithGoodLimits,
+    start: {
+      value: 0,
+      exclusive: true // don't flag 0's
+    }
+  }
+  const flagger = new Flagger(properties);
+  const flaggedData = flagger.flag(data);
+  t.deepEqual(flaggedData[0].flags[0], {flag: 'F'});
+  t.is(flaggedData[1].flags, undefined);
+  t.deepEqual(flaggedData[2].flags[0], {flag: 'F'});
+  t.is(flaggedData[3].flags, undefined);
+});

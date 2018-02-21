@@ -55,21 +55,29 @@ test('requires value to be a number', t => {
   t.is(error.message, 'value is not required type Number.');
 });
 
+const exactFlaggerProperties = {
+  ...commonProperties,
+  type: 'exact',
+  value: 1
+};
 test('sets properties when valid', t => {
-  const flaggerProperties = {
-    ...commonProperties,
-    type: 'exact',
-    value: 1
-  };
-  const flagger = new Flagger(flaggerProperties);
+  const flagger = new Flagger(exactFlaggerProperties);
   t.is(flagger.config.flag, commonProperties.flag);
   t.is(flagger.config.type, 'exact');
   t.is(flagger.config.value, 1);
 });
 
 // flag
-test.todo('flags values which match the value')
-test.todo('does not flag values which do not match the value')
+const data = [{value: 1}, {value: 0}, {value: 1}, {value: '1'}];
+
+test('flags values which match the value', t => {
+  const flagger = new Flagger({...exactFlaggerProperties, data: data});
+  const updatedData = flagger.flag();
+  t.deepEqual(updatedData[0].flags[0], {flag: 'F'});
+  t.is(updatedData[1].flags, undefined);
+  t.deepEqual(updatedData[2].flags[0], {flag: 'F'});
+  t.is(updatedData[3].flags, undefined);
+});
 
 // describe 'set' type
 // init

@@ -17,7 +17,7 @@ nvm use
 yarn install
 ```
 
-### Example Use
+### Example Usage
 
 ```bash
 cat examples/simple.json | ./index.js

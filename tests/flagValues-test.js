@@ -192,3 +192,16 @@ test('flags values less than end if no start is given', t => {
   t.is(flaggedData[3].flags, undefined);
   t.deepEqual(flaggedData[4].flags[0], {flag: 'F'});
 });
+
+test('flags values less than end if no start is given', t => {
+  const properties = {...rangeFlaggerPropertiesWithGoodLimits};
+  delete properties['end'];
+  const dataWithMorePositives = [...data, {value: 2}]
+  const flagger = new Flagger(properties);
+  const flaggedData = flagger.flag(dataWithMorePositives); 
+  t.deepEqual(flaggedData[0].flags[0], {flag: 'F'});
+  t.deepEqual(flaggedData[1].flags[0], {flag: 'F'});
+  t.deepEqual(flaggedData[2].flags[0], {flag: 'F'});
+  t.is(flaggedData[3].flags, undefined);
+  t.deepEqual(flaggedData[4].flags[0], {flag: 'F'});
+});

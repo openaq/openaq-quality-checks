@@ -901,6 +901,10 @@ crypto-random-string@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-1.0.0.tgz#a230f64f568310e1498009940790ec99545bca7e"
 
+csv-parse@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-2.0.4.tgz#5b469596766ee07f2cbd71aced7ae76b3c73c901"
+
 currently-unhandled@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/currently-unhandled/-/currently-unhandled-0.4.1.tgz#988df33feab191ef799a61369dd76c17adf957ea"

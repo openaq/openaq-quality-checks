@@ -15,6 +15,7 @@ Have an OpenAQ data quality concern or experience you would like to share? Pleas
 ```bash
 nvm use
 yarn install
+yarn test
 ```
 
 ### Example Usage

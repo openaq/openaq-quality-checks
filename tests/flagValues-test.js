@@ -80,11 +80,11 @@ test('sets properties when valid', t => {
 // exact flag
 test('flags values which match the value', t => {
   const flagger = new Flagger({ ...exactFlaggerProperties, value: 1 });
-  const updatedData = flagger.flag(data);
-  t.deepEqual(updatedData[0].flags[0], {flag: 'F'});
-  t.is(updatedData[1].flags, undefined);
-  t.deepEqual(updatedData[2].flags[0], {flag: 'F'});
-  t.is(updatedData[3].flags, undefined);
+  const flagggedData = flagger.flag(data);
+  t.deepEqual(flagggedData[0].flags[0], {flag: 'F'});
+  t.is(flagggedData[1].flags, undefined);
+  t.deepEqual(flagggedData[2].flags[0], {flag: 'F'});
+  t.is(flagggedData[3].flags, undefined);
 });
 
 // describe 'set' type
@@ -113,17 +113,10 @@ test('flags values which match any of the set', t => {
 
 // describe 'range' type
 // init
-test('requires a start object', t => {
+test('requires a start or end object', t => {
   const error = t.throws(() => new Flagger(rangeFlaggerProperties));
   t.is(error.name, 'ValidationError');
-  t.is(error.message, 'child "start" fails because ["start" is required]');
-});
-
-test('requires an end object', t => {
-  const properties = { ...rangeFlaggerProperties, start: {value: 1} };
-  const error = t.throws(() => new Flagger(properties));
-  t.is(error.name, 'ValidationError');
-  t.is(error.message, 'child "end" fails because ["end" is required]');
+  t.is(error.message, '"value" must contain at least one of [start, end]');
 });
 
 test('requires a start value', t => {
@@ -185,4 +178,17 @@ test('flags values exclusively using the start endpoint', t => {
   t.is(flaggedData[1].flags, undefined);
   t.deepEqual(flaggedData[2].flags[0], {flag: 'F'});
   t.is(flaggedData[3].flags, undefined);
+});
+
+test('flags values less than end if no start is given', t => {
+  const properties = {...rangeFlaggerPropertiesWithGoodLimits};
+  delete properties['start'];
+  const dataWithNegatives = [...data, {value: -1}]
+  const flagger = new Flagger(properties);
+  const flaggedData = flagger.flag(dataWithNegatives); 
+  t.deepEqual(flaggedData[0].flags[0], {flag: 'F'});
+  t.deepEqual(flaggedData[1].flags[0], {flag: 'F'});
+  t.deepEqual(flaggedData[2].flags[0], {flag: 'F'});
+  t.is(flaggedData[3].flags, undefined);
+  t.deepEqual(flaggedData[4].flags[0], {flag: 'F'});
 });

@@ -28,6 +28,7 @@ const rangeFlaggerPropertiesWithGoodLimits = {
     value: 1
   }
 };
+const repeatsFlaggerProperties = { ...commonProperties, type: 'repeats' };
 const data = [{value: 1}, {value: 0}, {value: 1}, {value: '1'}];
 
 // describe 'flagger#init'
@@ -52,7 +53,7 @@ test('requires a type', t => {
 test('requires type to be one of string, set, or array', t => {
   const error = t.throws(() => new Flagger({ ...commonProperties, type: 'cupcake' }));
   t.is(error.name, 'ValidationError');
-  t.is(error.message, 'child "type" fails because ["type" must be one of [exact, set, range]]');
+  t.is(error.message, 'child "type" fails because ["type" must be one of [exact, set, range, repeats]]');
 });
 
 // describe 'exact' type
@@ -77,7 +78,7 @@ test('sets properties when valid', t => {
   t.is(flagger.config.value, 1);
 });
 
-// exact flag
+// flag exact values
 test('flags values which match the value', t => {
   const flagger = new Flagger({ ...exactFlaggerProperties, value: 1 });
   const flagggedData = flagger.flag(data);
@@ -101,7 +102,7 @@ test('requires values to be an Array', t => {
   t.is(error.message, 'child "values" fails because ["values" must be an array]');
 });
 
-// flag
+// flag sets
 test('flags values which match any of the set', t => {
   const flagger = new Flagger({ ...setFlaggerProperties, values: [1, '1'] });
   const flaggedData = flagger.flag(data);
@@ -138,7 +139,7 @@ test('raises an error if the end object is less than the start object', t => {
   t.is(error.message, 'child "end" fails because [child "value" fails because ["value" must be greater than 1]]');
 });
 
-// flag
+// flag ranges
 test('flags values inclusively by default', t => {
   const flagger = new Flagger(rangeFlaggerPropertiesWithGoodLimits);
   const flaggedData = flagger.flag(data);
@@ -204,4 +205,51 @@ test('flags values less than end if no start is given', t => {
   t.deepEqual(flaggedData[2].flags[0], {flag: 'F'});
   t.is(flaggedData[3].flags, undefined);
   t.deepEqual(flaggedData[4].flags[0], {flag: 'F'});
+});
+
+// flags repeats
+test('throws an error if repeatMinimum is not a number', t => {
+  const error = t.throws(() => new Flagger({...repeatsFlaggerProperties, repeatMinimum: 0}));
+  t.is(error.name, 'ValidationError');
+  t.is(error.message, 'child "repeatMinimum" fails because ["repeatMinimum" must be a positive number]')
+});
+
+const dataWithRepeats = [...data.slice(0,2), {value: 0}, ...data.slice(3)];
+test('flags repeat values', t => {
+  const flagger = new Flagger(repeatsFlaggerProperties);
+  const flaggedData = flagger.flag(dataWithRepeats);
+  t.is(flaggedData[0].flags, undefined);
+  t.deepEqual(flaggedData[1].flags[0], {flag: 'F', sequenceNumber: 1});
+  t.deepEqual(flaggedData[2].flags[0], {flag: 'F', sequenceNumber: 2});
+  t.is(flaggedData[3].flags, undefined);
+});
+
+test('does not flag repeat values when repeated less than repeatMinimum times', t => {
+  const flagger = new Flagger({...repeatsFlaggerProperties, repeatMinimum: 3});
+  const flaggedData = flagger.flag(dataWithRepeats);
+  flaggedData.forEach((datum) => { t.is(datum.flags, undefined) });
+});
+
+test('flags repeat values when repeated at least repeatMinimum times', t => {
+  const dataWithMoreRepeats = [...dataWithRepeats.slice(0,3), {value: 0}];
+  const flagger = new Flagger({...repeatsFlaggerProperties, repeatMinimum: 3});
+  const flaggedData = flagger.flag(dataWithMoreRepeats);
+  const expectedFlag = {flag: 'F'};
+  t.is(flaggedData[0].flags, undefined);
+  flaggedData.slice(1,4).forEach((datum, idx) => {
+    t.deepEqual(datum.flags[0], {...expectedFlag, sequenceNumber: idx+1})
+  });
+});
+
+test('flags multiple sets of repeats, restarting sequenceNumber', t => {
+  const dataWithMulitipleRepeats = [{value: 1}, {value: 1}, {value: 2}, {value: 2}];
+  const flagger = new Flagger({...repeatsFlaggerProperties});
+  const flaggedData = flagger.flag(dataWithMulitipleRepeats);
+  const expectedFlag = {flag: 'F'};
+  flaggedData.slice(0,2).forEach((datum, idx) => {
+    t.deepEqual(datum.flags[0], {...expectedFlag, sequenceNumber: idx+1})
+  });
+  flaggedData.slice(2,4).forEach((datum, idx) => {
+    t.deepEqual(datum.flags[0], {...expectedFlag, sequenceNumber: idx+1})
+  });
 });

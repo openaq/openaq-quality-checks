@@ -2,8 +2,8 @@ const test = require('ava');
 const Flagger = require('../lib/flagger');
 
 const commonProperties = {flag: 'F'};
-const exactFlaggerProperties = {...commonProperties, type: 'exact'};
-const setFlaggerProperties = {...commonProperties, type: 'set'};
+const exactFlaggerProperties = { ...commonProperties, type: 'exact' };
+const setFlaggerProperties = { ...commonProperties, type: 'set' };
 const rangeFlaggerProperties = { ...commonProperties, type: 'range' };
 const rangeFlaggerPropertiesWithEmptyLimits = { 
   ...rangeFlaggerProperties,

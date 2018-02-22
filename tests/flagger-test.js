@@ -242,14 +242,34 @@ test('flags repeat values when repeated at least repeatMinimum times', t => {
 });
 
 test('flags multiple sets of repeats, restarting sequenceNumber', t => {
-  const dataWithMulitipleRepeats = [{value: 1}, {value: 1}, {value: 2}, {value: 2}];
+  const dataWithMulitipleRepeats = [
+    {
+      id: 2,
+      value: 1
+    }, {
+      id: 3,
+      value: 1
+    }, {
+      id: 4,
+      value: 2
+    }, {
+      id: 5,
+      value: 2
+    }
+  ];
   const flagger = new Flagger({...repeatsFlaggerProperties});
   const flaggedData = flagger.flag(dataWithMulitipleRepeats);
   const expectedFlag = {flag: 'F'};
-  flaggedData.slice(0,2).forEach((datum, idx) => {
-    t.deepEqual(datum.flags[0], {...expectedFlag, sequenceNumber: idx+1})
-  });
-  flaggedData.slice(2,4).forEach((datum, idx) => {
-    t.deepEqual(datum.flags[0], {...expectedFlag, sequenceNumber: idx+1})
+  flaggedData.forEach((datum, idx) => {
+    t.deepEqual(datum, {
+      id: idx+2,
+      value: dataWithMulitipleRepeats[idx].value,
+      flags: [
+        {
+          ...expectedFlag,
+          sequenceNumber: Math.floor(idx%2)+1
+        }
+      ]
+    });
   });
 });

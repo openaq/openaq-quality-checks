@@ -50,7 +50,7 @@ test('requires a type', t => {
 });
 
 test('requires type to be one of string, set, or array', t => {
-  const error = t.throws(() => new Flagger({...commonProperties, type: 'cupcake'}));
+  const error = t.throws(() => new Flagger({ ...commonProperties, type: 'cupcake' }));
   t.is(error.name, 'ValidationError');
   t.is(error.message, 'child "type" fails because ["type" must be one of [exact, set, range]]');
 });
@@ -66,12 +66,12 @@ test('requires a value', t => {
 test('requires value to be a number', t => {
   // TODO(aimee): Seems like there might be a bug in joi if we set value to a
   // stringified (e.g. value: '1') number it will not error.
-  const error = t.throws(() => new Flagger({...exactFlaggerProperties, value: 'keylime'}));
+  const error = t.throws(() => new Flagger({ ...exactFlaggerProperties, value: 'keylime' }));
   t.is(error.message, 'child "value" fails because ["value" must be a number]');
 });
 
 test('sets properties when valid', t => {
-  const flagger = new Flagger({...exactFlaggerProperties, value: 1});
+  const flagger = new Flagger({ ...exactFlaggerProperties, value: 1 });
   t.is(flagger.config.flag, commonProperties.flag);
   t.is(flagger.config.type, 'exact');
   t.is(flagger.config.value, 1);
@@ -79,7 +79,7 @@ test('sets properties when valid', t => {
 
 // exact flag
 test('flags values which match the value', t => {
-  const flagger = new Flagger({...exactFlaggerProperties, value: 1});
+  const flagger = new Flagger({ ...exactFlaggerProperties, value: 1 });
   const updatedData = flagger.flag(data);
   t.deepEqual(updatedData[0].flags[0], {flag: 'F'});
   t.is(updatedData[1].flags, undefined);
@@ -96,14 +96,14 @@ test('requires values property', t => {
 });
 
 test('requires values to be an Array', t => {
-  const error = t.throws(() => new Flagger({...setFlaggerProperties, values: 1}));
+  const error = t.throws(() => new Flagger({ ...setFlaggerProperties, values: 1 }));
   t.is(error.name, 'ValidationError');
   t.is(error.message, 'child "values" fails because ["values" must be an array]');
 });
 
 // flag
 test('flags values which match any of the set', t => {
-  const flagger = new Flagger({...setFlaggerProperties, values: [1, '1']});
+  const flagger = new Flagger({ ...setFlaggerProperties, values: [1, '1'] });
   const flaggedData = flagger.flag(data);
   t.deepEqual(flaggedData[0].flags[0], {flag: 'F'});
   t.is(flaggedData[1].flags, undefined);
@@ -120,7 +120,7 @@ test('requires a start object', t => {
 });
 
 test('requires an end object', t => {
-  const properties = {...rangeFlaggerProperties, start: {value: 1}};
+  const properties = { ...rangeFlaggerProperties, start: {value: 1} };
   const error = t.throws(() => new Flagger(properties));
   t.is(error.name, 'ValidationError');
   t.is(error.message, 'child "end" fails because ["end" is required]');

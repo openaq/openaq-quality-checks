@@ -11,3 +11,6 @@ negatives:
 repeats:
   flag: R
   type: repeats
+  groupBy:
+    coordinates: ['latitude', 'longitude']
+  orderBy: 'date.utc'

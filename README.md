@@ -22,7 +22,7 @@ yarn test
 
 #### Read and output JSON
 
-Note: Commands assume you have [jq](https://stedolan.github.io/jq/) installed, but this is just for pretty printing json. If you don't have jq installed, remove the trailing `| jq .`
+Note: Commands below require [jq](https://stedolan.github.io/jq/), but jq is just for pretty printing json. If you don't have jq installed, remove the trailing `| jq .`
 
 ```bash
 cat examples/addis-ababa-20180202.json | ./index.js | jq .

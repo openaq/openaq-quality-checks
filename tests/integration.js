@@ -60,6 +60,7 @@ const testReadsCSVAndOutputsJSON = function() {
 
 const testReadsAndOutputsCSV = function() {
   const child = cp.spawn('./index.js', [...csvArgs, '--output-format', 'csv']);
+
   testCommand(child, data => {
     const results = parse(data, csvParseOpts);
     let testResult = undefined;
@@ -75,6 +76,7 @@ const testReadsAndOutputsCSV = function() {
 const testWritesJSONToFile = function() {
   const outfile = 'out.json';
   const child = cp.spawn('./index.js', [...jsonArgs, '--outfile', outfile]);
+
   testCommand(child, () => {
     // read outfile
     const fileContents = JSON.parse(fs.readFileSync(outfile));
@@ -91,6 +93,7 @@ const testWritesCSVToFile = function() {
   const outfile = 'out.csv';
   const flags = [...csvArgs, '--output-format', 'csv', '--outfile', outfile];
   const child = cp.spawn('./index.js', flags);
+
   testCommand(child, () => {
     // read outfile
     const fileContents = parse(fs.readFileSync(outfile), csvParseOpts);

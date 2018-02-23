@@ -37,6 +37,8 @@ keyTwo:
   # ...
 ```
 
+This configuration is merged with the default configuration, overriding fields that exist and adding fields that do not exist.
+
 #### Read and output JSON
 
 Note: Commands below require [jq](https://stedolan.github.io/jq/), but jq is just for pretty printing json. If you don't have jq installed, remove the trailing `| jq .`

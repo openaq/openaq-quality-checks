@@ -25,8 +25,6 @@ const argv = require('yargs')
     .epilog('copyright 2018')
     .argv;
 
-let data = '';
-
 function flagData(data) {
   let flaggedData = [...data];
   Object.values(defaultConfig).forEach((flagConfig) => {
@@ -60,6 +58,8 @@ function readFlagOutput(data) {
   }
 }
 
+let data = '';
+
 if (argv.infile) {
   data = fs.readFileSync(argv.infile, 'utf8');
   readFlagOutput(data);
@@ -67,7 +67,7 @@ if (argv.infile) {
   process.stdin.setEncoding('utf8');
 
   process.stdin.on('readable', () => {
-    const chunk = this.read();
+    const chunk = process.stdin.read();
     if (chunk !== null) {
       data += chunk;
     }

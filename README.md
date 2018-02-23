@@ -20,8 +20,21 @@ yarn test
 
 ### Example Usage
 
+#### Read and output JSON
+
+Note: Commands assume you have [jq](https://stedolan.github.io/jq/) installed, but this is just for pretty printing json. If you don't have jq installed, remove the trailing `| jq .`
+
 ```bash
-cat examples/simple.json | ./index.js
+cat examples/addis-ababa-20180202.json | ./index.js | jq .
 # or
-./index.js --infile examples/simple.json
+./index.js --infile examples/addis-ababa-20180202.json | jq .
+```
+
+#### Read and output CSV
+
+```bash
+export flags='--input-format csv --output-format csv'
+cat examples/addis-ababa-20180202.csv | ./index.js ${flags}
+# or
+./index.js --infile examples/addis-ababa-20180202.csv ${flags}
 ```

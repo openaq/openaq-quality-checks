@@ -120,7 +120,6 @@ const testCanOverrideFlagConfiguration = function() {
 
   testCommand(child, data => {
     const results = JSON.parse(data);
-    fs.writeFileSync('out.json', data)
     const testResult = assert.deepEqual(results, expectedConfiguredResults);
     if (testResult === undefined) {
       console.log('\u2714 Successful: Can override configuration.')

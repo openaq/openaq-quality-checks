@@ -38,7 +38,7 @@ const testReadsAndOutputsJSON = function() {
     const results = JSON.parse(data);
     const testResult = assert.deepEqual(results, expectedResults);
     if (testResult === undefined) {
-      console.log('- Successful: Reads and outputs JSON.')
+      console.log('\u2714 Successful: Reads and outputs JSON.')
     };
   });
 };
@@ -53,7 +53,7 @@ const testReadsCSVAndOutputsJSON = function() {
       assert.deepEqual(result.flags, [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
     });
     if (testResult === undefined) {
-      console.log('- Successful: Reads CSV and outputs JSON.')
+      console.log('\u2714 Successful: Reads CSV and outputs JSON.')
     };
   });
 };
@@ -67,7 +67,7 @@ const testReadsAndOutputsCSV = function() {
       assert.deepEqual(JSON.parse(result.flags), [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
     });
     if (testResult === undefined) {
-      console.log('- Successful: Reads and outputs CSV.')
+      console.log('\u2714 Successful: Reads and outputs CSV.')
     };
   });
 };
@@ -82,7 +82,7 @@ const testWritesJSONToFile = function() {
     assert.deepEqual(fileContents, expectedResults);
     if (testResult === undefined) {
       fs.unlinkSync('out.json');
-      console.log('- Successful: Writes JSON file')
+      console.log('\u2714 Successful: Writes JSON file')
     };
   });
 };
@@ -100,17 +100,21 @@ const testWritesCSVToFile = function() {
     });
     if (testResult === undefined) {
       fs.unlinkSync('out.csv');
-      console.log('- Successful: Writes CSV file')
+      console.log('\u2714 Successful: Writes CSV file')
     };
   });
 };
 
 const testCanRemoveSomeFlaggedData = function() {
-  console.log('- Pending: Can remove some flagged data')
+  console.log('~ Pending: Can remove some flagged data');
 }
 
 const testCanRemoveAllFlaggedData = function() {
-  console.log('- Pending: Can remove all flagged data')
+  console.log('~ Pending: Can remove all flagged data');
+}
+
+const testCanOverrideFlagConfiguration = function() {
+  console.log('~ Pending: Can override flag configuration');
 }
 
 testReadsAndOutputsJSON();
@@ -119,4 +123,7 @@ testReadsAndOutputsCSV();
 testWritesJSONToFile();
 testWritesCSVToFile();
 
-// TODO: Tests for flags which override default configuration in config.yml
+// Pending tests
+testCanRemoveSomeFlaggedData();
+testCanRemoveAllFlaggedData();
+testCanOverrideFlagConfiguration();

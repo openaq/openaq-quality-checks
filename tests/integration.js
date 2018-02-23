@@ -10,54 +10,54 @@ const csvTestFilename = 'examples/addis-ababa-20180202.csv';
 const expectedJsonResultsFilename = 'examples/flagged/addis-ababa-20180202-defaultFlags.json';
 const expectedResults = JSON.parse(fs.readFileSync(expectedJsonResultsFilename));
 
-console.log('\nStarting integration tests...');
+console.log('Starting integration tests...');
+
+const testCommand = function(child, cb) {
+  let data = '';
+
+  child.stdout.on('data', chunk => {
+    data += chunk;
+    cb(data);
+  });
+
+  child.stderr.on('data', chunk => {
+    data += chunk;
+    console.log(data);
+  });
+};
 
 const testReadsAndOutputsJSON = function() {
-  let data = '';
   const child = cp.spawn('./index.js', ['--infile', jsonTestFilename]);
 
-  child.stdout.on('data', (chunk) => {
-    data += chunk;
+  testCommand(child, data => {
     const results = JSON.parse(data);
     const testResult = assert.deepEqual(results, expectedResults);
     if (testResult === undefined) {
       console.log('- Successful: Reads and outputs JSON.')
     };
   });
+}();
 
-  child.stderr.on('data', (chunk) => {
-    data += chunk;
-    console.log(data);
+const testReadsCSVAndOutputsJSON = function() {
+  const child = cp.spawn('./index.js', ['--infile', csvTestFilename, '--input-format', 'csv']);
+
+  testCommand(child, data => {
+    const results = JSON.parse(data);
+    let testResult = undefined;
+    results.forEach((result, idx) => {
+      assert.deepEqual(result.flags, [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
+    });
+    if (testResult === undefined) {
+      console.log('- Successful: Reads CSV and outputs JSON.')
+    };
   });
 }();
 
-// const testReadsCSVAndOutputsJSON = function() {
-//   let data = '';
-//   const child = cp.spawn('./index.js', ['--infile', csvTestFilename, '--input-format', 'csv']);
-
-//   child.stdout.on('data', (chunk) => {
-//     data += chunk;
-//     const results = JSON.parse(data);
-//     let testResult = undefined;
-//     results.forEach((result, idx) => {
-//       assert.deepEqual(result.flags, [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
-//     });
-//     if (testResult === undefined) {
-//       console.log('- Successful: Reads CSV and outputs JSON.')
-//     };
-//   });
-//   child.stderr.on('data', (chunk) => {
-//     data += chunk;
-//     console.log(data);
-//   });
-// }();
-
 const testReadsAndOutputsCSV = function() {
   console.log('- Pending: Reads and outputs CSV');
-
 }
 
-const testReadsFromStdinAndWritesToFile = function() {
+const testWritesToFile = function() {
   console.log('- Pending: Reads from stdin and writes to file');
 }
 
@@ -65,25 +65,4 @@ const testCanRemoveFlaggedData = function() {
   console.log('- Pending: Can remove flagged data')
 }
 
-const testGroupsByCoordinatesOrderedByDatetime = function() {
-  // let data = '';
-  // const child = cp.spawn('./index.js', ['--infile', jsonTestFilename]);
-
-  // child.stdout.on('data', (chunk) => {
-  //   data += chunk;
-  //   const results = JSON.parse(data);
-  //   const testResult = assert.deepEqual(results, expectedResults);
-  //   if (testResult === undefined) {
-  //     console.log('- Successful: Reads and outputs JSON.')
-  //   };
-  // });
-  console.log('- Pending: Groups by coordinates ordered by datetime');
-}
-
-const testGroupsByLocationOrderedByDatetime = function() {
-  console.log('- Pending: Groups by location ordered by datetime');
-}
-
-// test.todo('it configurably reads and outputs CSV')
-// test.todo('it configurably writes a CSV file')
-// test.todo('it configurably writes a JSON file')
+// TODO: Tests for flags which override default configuration in config.yml

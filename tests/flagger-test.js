@@ -371,7 +371,7 @@ test('flag repeats using configured nested grouped by', t => {
   ];
   const flagger = new Flagger({
     ...repeatsFlaggerProperties,
-    groupBy: {group: ['lat', 'long']},
+    groupBy: ['group.lat', 'group.lon'],
     orderBy: 'date'
   });
   const flaggedData = flagger.flag(dataWithNestedGroups);

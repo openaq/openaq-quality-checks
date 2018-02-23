@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 const fs = require('fs');
-const yaml = require('js-yaml');
 const parse = require('csv-parse/lib/sync');
+const yaml = require('js-yaml');
 
-const Flagger = require('./lib/flagger');
 const defaultConfig = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'));
+const Flagger = require('./lib/flagger');
 
 // cat examples/simple.json | ./index.js
 // ./index.js --infile examples/simple.json
@@ -34,6 +34,8 @@ function parseData(data) {
   if (argv['input-format'] === 'csv') {
     parsedData = parse(data, {columns: true, auto_parse: true});
   } else {
+    // TODO(aimee): Assumption about schema here should be flexible
+    // that JSON data is nested in results array is an assumption we're interpreting data from the API
     parsedData = JSON.parse(data).results;
   }
   return parsedData;  

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const assert = require('assert');
 const fs = require('fs');
+const parse = require('csv-parse/lib/sync');
 const path = require('path');
 const cp = require('child_process');
 
@@ -9,6 +10,7 @@ const jsonTestFilename = 'examples/addis-ababa-20180202.json';
 const csvTestFilename = 'examples/addis-ababa-20180202.csv';
 const expectedJsonResultsFilename = 'examples/flagged/addis-ababa-20180202-defaultFlags.json';
 const expectedResults = JSON.parse(fs.readFileSync(expectedJsonResultsFilename));
+const csvParseOpts = {columns: true, auto_parse: true, skip_empty_lines: true};
 
 console.log('Starting integration tests...');
 
@@ -26,8 +28,11 @@ const testCommand = function(child, cb) {
   });
 };
 
+const jsonArgs = ['--infile', jsonTestFilename];
+const csvArgs = ['--infile', csvTestFilename, '--input-format', 'csv'];
+
 const testReadsAndOutputsJSON = function() {
-  const child = cp.spawn('./index.js', ['--infile', jsonTestFilename]);
+  const child = cp.spawn('./index.js', jsonArgs);
 
   testCommand(child, data => {
     const results = JSON.parse(data);
@@ -36,10 +41,10 @@ const testReadsAndOutputsJSON = function() {
       console.log('- Successful: Reads and outputs JSON.')
     };
   });
-}();
+};
 
 const testReadsCSVAndOutputsJSON = function() {
-  const child = cp.spawn('./index.js', ['--infile', csvTestFilename, '--input-format', 'csv']);
+  const child = cp.spawn('./index.js', csvArgs);
 
   testCommand(child, data => {
     const results = JSON.parse(data);
@@ -51,18 +56,67 @@ const testReadsCSVAndOutputsJSON = function() {
       console.log('- Successful: Reads CSV and outputs JSON.')
     };
   });
-}();
+};
 
 const testReadsAndOutputsCSV = function() {
-  console.log('- Pending: Reads and outputs CSV');
+  const child = cp.spawn('./index.js', [...csvArgs, '--output-format', 'csv']);
+  testCommand(child, data => {
+    const results = parse(data, csvParseOpts);
+    let testResult = undefined;
+    results.forEach((result, idx) => {
+      assert.deepEqual(JSON.parse(result.flags), [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
+    });
+    if (testResult === undefined) {
+      console.log('- Successful: Reads and outputs CSV.')
+    };
+  });
+};
+
+const testWritesJSONToFile = function() {
+  const outfile = 'out.json';
+  const child = cp.spawn('./index.js', [...jsonArgs, '--outfile', outfile]);
+  testCommand(child, () => {
+    // read outfile
+    const fileContents = JSON.parse(fs.readFileSync(outfile));
+    let testResult = undefined;
+    assert.deepEqual(fileContents, expectedResults);
+    if (testResult === undefined) {
+      fs.unlinkSync('out.json');
+      console.log('- Successful: Writes JSON file')
+    };
+  });
+};
+
+const testWritesCSVToFile = function() {
+  const outfile = 'out.csv';
+  const flags = [...csvArgs, '--output-format', 'csv', '--outfile', outfile];
+  const child = cp.spawn('./index.js', flags);
+  testCommand(child, () => {
+    // read outfile
+    const fileContents = parse(fs.readFileSync(outfile), csvParseOpts);
+    let testResult = undefined;
+    fileContents.forEach((result, idx) => {
+      assert.deepEqual(JSON.parse(result.flags), [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
+    });
+    if (testResult === undefined) {
+      fs.unlinkSync('out.csv');
+      console.log('- Successful: Writes CSV file')
+    };
+  });
+};
+
+const testCanRemoveSomeFlaggedData = function() {
+  console.log('- Pending: Can remove some flagged data')
 }
 
-const testWritesToFile = function() {
-  console.log('- Pending: Reads from stdin and writes to file');
+const testCanRemoveAllFlaggedData = function() {
+  console.log('- Pending: Can remove all flagged data')
 }
 
-const testCanRemoveFlaggedData = function() {
-  console.log('- Pending: Can remove flagged data')
-}
+testReadsAndOutputsJSON();
+testReadsCSVAndOutputsJSON();
+testReadsAndOutputsCSV();
+testWritesJSONToFile();
+testWritesCSVToFile();
 
 // TODO: Tests for flags which override default configuration in config.yml

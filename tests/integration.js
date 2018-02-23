@@ -33,7 +33,10 @@ const testTwo = function() {
   child.stdout.on('data', (chunk) => {
     data += chunk;
     const results = JSON.parse(data);
-    const testResult = assert.deepEqual(results, expectedResults);
+    let testResult = undefined;
+    results.forEach((result, idx) => {
+      assert.deepEqual(result.flags, [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
+    });
     if (testResult === undefined) {
       console.log('- Successful: Reads CSV and outputs JSON.')
     };

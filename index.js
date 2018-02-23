@@ -32,7 +32,7 @@ function flagData(data) {
 function parseData(data) {
   let parsedData;
   if (argv['input-format'] === 'csv') {
-    parsedData = parse(data, {columns: true});
+    parsedData = parse(data, {columns: true, auto_parse: true});
   } else {
     parsedData = JSON.parse(data).results;
   }

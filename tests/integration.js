@@ -127,3 +127,4 @@ testWritesCSVToFile();
 testCanRemoveSomeFlaggedData();
 testCanRemoveAllFlaggedData();
 testCanOverrideFlagConfiguration();
+

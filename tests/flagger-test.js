@@ -265,3 +265,128 @@ test('flags multiple sets of repeats, restarting sequenceNumber', t => {
     });
   });
 });
+
+test('flag repeats using configured grouped and ordered by', t => {
+  const dataWithGroups = [
+    {
+      id: 0,
+      group: 2,
+      value: 1,
+      date: '2018-02-03'
+    }, {
+      id: 1,
+      group: 3,
+      value: 1,
+      date: '2018-02-03'
+    }, {
+      id: 2,
+      group: 2,
+      value: 1,
+      date: '2018-02-02'
+    }, {
+      id: 4,
+      group: 3,
+      value: 1,
+      date: '2018-02-02'
+    }
+  ];
+  const dataWithGroupsGroupedAndOrdered = [
+    {
+      id: 2,
+      group: 2,
+      value: 1,
+      date: '2018-02-02'
+    },
+    {
+      id: 0,
+      group: 2,
+      value: 1,
+      date: '2018-02-03'
+    }, {
+      id: 4,
+      group: 3,
+      value: 1,
+      date: '2018-02-02'
+    }, {
+      id: 1,
+      group: 3,
+      value: 1,
+      date: '2018-02-03'
+    }
+  ];
+  const flagger = new Flagger({...repeatsFlaggerProperties, groupBy: 'group', orderBy: 'date'});
+  const flaggedData = flagger.flag(dataWithGroups);
+  const expectedFlag = {flag: 'F'};
+  flaggedData.forEach((datum, idx) => {
+    const expectedItemFields = dataWithGroupsGroupedAndOrdered[idx];
+    t.deepEqual(datum, {
+      ...expectedItemFields,
+      flags: [
+        {
+          ...expectedFlag,
+          sequenceNumber: Math.floor(idx%2)+1
+        }
+      ]
+    });
+  });
+});
+
+test('flag repeats using configured nested grouped by', t => {
+  const dataWithNestedGroups = [
+    {
+      id: 0,
+      group: {lat: 1, lon: 2},
+      value: 1,
+      date: '2018-02-03'
+    }, {
+      id: 1,
+      group: {lat: 3, lon: 4},
+      value: 1,
+      date: '2018-02-03'
+    }, {
+      id: 2,
+      group: {lat: 1, lon: 2},
+      value: 1,
+      date: '2018-02-02'
+    }
+  ];
+  const dataWithNestedGroupsGroupedAndOrdered = [
+    {
+      id: 2,
+      group: {lat: 1, lon: 2},
+      value: 1,
+      date: '2018-02-02'
+    },
+    {
+      id: 0,
+      group: {lat: 1, lon: 2},
+      value: 1,
+      date: '2018-02-03'
+    }, {
+      id: 1,
+      group: {lat: 3, lon: 4},
+      value: 1,
+      date: '2018-02-03'
+    }
+  ];
+  const flagger = new Flagger({
+    ...repeatsFlaggerProperties,
+    groupBy: {group: ['lat', 'long']},
+    orderBy: 'date'
+  });
+  const flaggedData = flagger.flag(dataWithNestedGroups);
+  const expectedFlag = {flag: 'F'};
+  flaggedData.slice(0,2).forEach((datum, idx) => {
+    const expectedItemFields = dataWithNestedGroupsGroupedAndOrdered[idx];
+    t.deepEqual(datum, {
+      ...expectedItemFields,
+      flags: [
+        {
+          ...expectedFlag,
+          sequenceNumber: Math.floor(idx%2)+1
+        }
+      ]
+    });
+  });
+  testUndefinedFlags(t, [flaggedData[2]]);
+});

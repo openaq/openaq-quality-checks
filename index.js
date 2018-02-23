@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const _ = require('lodash');
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
 const stringify = require('csv-stringify/lib/sync')
@@ -23,14 +24,28 @@ const argv = require('yargs')
     .describe('skip', 'Space-separated list of flags to skip.') 
     .array('--remove')
     .describe('remove', 'Space-separated list data to remove if flagged.')
+    .describe('config', 'Config file to override default config.')
     .help('h')
     .alias('h', 'help')
     .epilog('copyright 2018')
     .argv;
 
+let config = {...defaultConfig};
+
+function customizer(objValue, srcValue) {
+  if (_.isArray(objValue)) {
+    return objValue = srcValue;
+  }
+}
+
+if (argv.config) {
+  const overrides = yaml.safeLoad(fs.readFileSync(argv.config));
+  config = _.mergeWith(config, overrides, customizer);
+};
+
 function flagData(data) {
   let flaggedData = [...data];
-  Object.values(defaultConfig).forEach((flagConfig) => {
+  Object.values(config).forEach((flagConfig) => {
     if (argv.skip === undefined || !argv.skip.includes(flagConfig.flag)) {
       const flagger = new Flagger(flagConfig);
       flaggedData = flagger.flag(flaggedData);

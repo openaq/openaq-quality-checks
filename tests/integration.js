@@ -73,12 +73,45 @@ const testReadsAndOutputsCSV = function() {
   });
 };
 
+const testCanSkipFlags = function() {
+  const child = cp.spawn('./index.js', [...jsonArgs, '--skip', 'R', 'N']);
+
+  testCommand(child, data => {
+    const results = JSON.parse(data);
+    const testResult = results.forEach(r => {
+      if (r.flags && r.flags.length > 0) {
+        assert.equal(undefined, r.flags.find(f => f.flag === 'R'));
+        assert.equal(undefined, r.flags.find(f => f.flag === 'N'));
+      }
+    });
+    if (testResult === undefined) {
+      console.log('\u2714 Successful: Configurably skips flags.')
+    };
+  });
+}
+
 const testCanRemoveSomeFlaggedData = function() {
-  console.log('~ Pending: Can remove some flagged data');
+  const child = cp.spawn('./index.js', [...jsonArgs, '--remove', 'E']);
+
+  testCommand(child, data => {
+    const results = JSON.parse(data);
+    const testResult = assert.equal(results.length, 2);
+    if (testResult === undefined) {
+      console.log('\u2714 Successful: Can remove some flagged data.')
+    };
+  });
 }
 
 const testCanRemoveAllFlaggedData = function() {
-  console.log('~ Pending: Can remove all flagged data');
+  const child = cp.spawn('./index.js', [...jsonArgs, '--remove-all']);
+
+  testCommand(child, data => {
+    const results = JSON.parse(data);
+    const testResult = assert.equal(results.length, 1);
+    if (testResult === undefined) {
+      console.log('\u2714 Successful: Can remove all flagged data.')
+    };
+  });
 }
 
 const testCanOverrideFlagConfiguration = function() {
@@ -88,9 +121,9 @@ const testCanOverrideFlagConfiguration = function() {
 testReadsAndOutputsJSON();
 testReadsCSVAndOutputsJSON();
 testReadsAndOutputsCSV();
-
-// Pending tests
+testCanSkipFlags();
 testCanRemoveSomeFlaggedData();
 testCanRemoveAllFlaggedData();
-testCanOverrideFlagConfiguration();
 
+// Merged config passed as argument with default
+testCanOverrideFlagConfiguration();

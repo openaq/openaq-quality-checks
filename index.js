@@ -11,15 +11,14 @@ const Flagger = require('./lib/flagger');
 // ./index.js --infile examples/simple.json
 const argv = require('yargs')
     .usage('Usage: $0 [options]')
-    .example('$0 --infile foo.json', 'flags the contents of given file and write to stdout')
+    .example('$0 --infile foo.json', 'Flags the contents of a file and writes to stdout.')
+    .example('cat foo.json | $0', 'Flags the contents of stdin and writes to stdout.')
     .nargs('--infile', 1)
-    .describe('infile', 'Location of input file, expected json or csv format')
-    .nargs('--outfile', 1)
-    .describe('outfile', 'Location of output file to write to, expected json or csv format')
+    .describe('infile', 'Input file. Should be the same format as input-format (which default to json).')
     .nargs('--input-format', 1)
-    .describe('input-format', 'Format of input, can be csv or json, defaults to json')
+    .describe('input-format', 'Input format, can be csv or json. Defaults to json.')
     .nargs('--ouptput-format', 1)
-    .describe('ouptput-format', 'Format of output, can be csv or json, defaults to json')
+    .describe('ouptput-format', 'Output format, can be csv or json. Defaults to json.')
     .help('h')
     .alias('h', 'help')
     .epilog('copyright 2018')
@@ -51,12 +50,7 @@ function readFlagOutput(data) {
   const parsedData = parseData(data);
   const flaggedData = flagData(parsedData);
   const outData = (argv['output-format'] === 'csv') ? stringify(flaggedData, {header: true}) : JSON.stringify(flaggedData);
-  if (argv.outfile) {
-    fs.writeFileSync(argv.outfile, outData);
-    console.log(`Flagged data written to file ${argv.outfile}`);
-  } else {
-    console.log(outData);
-  }
+  console.log(outData);
 }
 
 let data = '';

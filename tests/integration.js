@@ -73,41 +73,6 @@ const testReadsAndOutputsCSV = function() {
   });
 };
 
-const testWritesJSONToFile = function() {
-  const outfile = 'out.json';
-  const child = cp.spawn('./index.js', [...jsonArgs, '--outfile', outfile]);
-
-  testCommand(child, () => {
-    // read outfile
-    const fileContents = JSON.parse(fs.readFileSync(outfile));
-    let testResult = undefined;
-    assert.deepEqual(fileContents, expectedResults);
-    if (testResult === undefined) {
-      fs.unlinkSync('out.json');
-      console.log('\u2714 Successful: Writes JSON file')
-    };
-  });
-};
-
-const testWritesCSVToFile = function() {
-  const outfile = 'out.csv';
-  const flags = [...csvArgs, '--output-format', 'csv', '--outfile', outfile];
-  const child = cp.spawn('./index.js', flags);
-
-  testCommand(child, () => {
-    // read outfile
-    const fileContents = parse(fs.readFileSync(outfile), csvParseOpts);
-    let testResult = undefined;
-    fileContents.forEach((result, idx) => {
-      assert.deepEqual(JSON.parse(result.flags), [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
-    });
-    if (testResult === undefined) {
-      fs.unlinkSync('out.csv');
-      console.log('\u2714 Successful: Writes CSV file')
-    };
-  });
-};
-
 const testCanRemoveSomeFlaggedData = function() {
   console.log('~ Pending: Can remove some flagged data');
 }
@@ -123,8 +88,6 @@ const testCanOverrideFlagConfiguration = function() {
 testReadsAndOutputsJSON();
 testReadsCSVAndOutputsJSON();
 testReadsAndOutputsCSV();
-testWritesJSONToFile();
-testWritesCSVToFile();
 
 // Pending tests
 testCanRemoveSomeFlaggedData();

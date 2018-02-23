@@ -14,7 +14,19 @@
       "coordinates": {
         "latitude": 8.996519,
         "longitude": 38.725433
-      }
+      },
+      "flags": [
+        {
+          "flag": "E"
+        },
+        {
+          "flag": "N"
+        },
+        {
+          "flag": "R",
+          "sequenceNumber": 1
+        }        
+      ]
     },
     {
       "location": "US Diplomatic Post: Addis Ababa School",
@@ -27,7 +39,19 @@
       "coordinates": {
         "latitude": 8.996519,
         "longitude": 38.725433
-      }
+      },
+      "flags": [
+        {
+          "flag": "E"
+        },
+        {
+          "flag": "N"
+        },
+        {
+          "flag": "R",
+          "sequenceNumber": 2
+        }        
+      ]      
     },
     {
       "location": "US Diplomatic Post: Addis Ababa School",
@@ -53,7 +77,15 @@
       "coordinates": {
         "latitude": 8.996519,
         "longitude": 38.725433
-      }
+      },
+      "flags": [
+        {
+          "flag": "E"
+        },
+        {
+          "flag": "N"
+        }      
+      ]      
     },
     {
       "location": "US Diplomatic Post: Addis Ababa School",
@@ -66,7 +98,12 @@
       "coordinates": {
         "latitude": 8.996519,
         "longitude": 38.725433
-      }
+      },
+      "flags": [
+        {
+          "flag": "N"
+        }     
+      ]      
     }
   ]
 }

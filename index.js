@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const yaml = require('js-yaml');
+const parse = require('csv-parse/lib/sync');
 
 const Flagger = require('./lib/flagger');
 const defaultConfig = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'));
@@ -9,7 +10,7 @@ const defaultConfig = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'));
 // ./index.js --infile examples/simple.json
 const argv = require('yargs')
     .usage('Usage: $0 [options]')
-    .example('$0 --infile foo.js', 'flag the contents of given file and write to stdout')
+    .example('$0 --infile foo.json', 'flags the contents of given file and write to stdout')
     .nargs('--infile', 1)
     .describe('--infile', 'Input file, json or csv')
     .help('h')
@@ -28,10 +29,21 @@ function flagData(data) {
   return flaggedData;
 };
 
+function parseData(data) {
+  let parsedData;
+  if (argv['input-format'] === 'csv') {
+    parsedData = parse(data, {columns: true});
+  } else {
+    parsedData = JSON.parse(data).results;
+  }
+  return parsedData;  
+}
+
 if (argv.infile) {
   data = fs.readFileSync(argv.infile, 'utf8');
-  const parsedData = JSON.parse(data);
-  console.log(flagData(parsedData.results));
+  const parsedData = parseData(data);
+  const flaggedData = flagData(parsedData);
+  console.log(JSON.stringify(flaggedData));
 } else {
   process.stdin.setEncoding('utf8');
 
@@ -43,6 +55,8 @@ if (argv.infile) {
   });
 
   process.stdin.on('end', function() {
-    console.log(flagData(data.results));
+    const parsedData = parseData(data);
+    const flaggedData = flagData(parsedData);
+    console.log(JSON.stringify(flaggedData));
   });
 }

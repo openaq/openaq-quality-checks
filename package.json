@@ -22,6 +22,7 @@
     "csv-parse": "^2.0.4",
     "joi": "^13.1.2",
     "js-yaml": "^3.10.0",
+    "lodash": "^4.17.5",
     "yargs": "^11.0.0"
   },
   "devDependencies": {

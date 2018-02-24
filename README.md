@@ -20,6 +20,25 @@ yarn test
 
 ### Example Usage
 
+A set of default flags are configured in [`config.yml`](config.yml). The default flags are:
+
+* **`E`** flags the value -999
+* **`N`** flags negative values
+* **`R`** flags repeating values, grouped by coordinates and ordered by date.
+
+This configuration can be overriden using the `--config <file.yml>` argument, which should point to a yml file which has the following structure:
+
+```yaml
+keyOne: # Arbitrary identifier for the flag, e.g. 'errors'. Useful for merging with the default configuration.
+  flag: Any string, e.g. E
+  type: One of exact|set|range|repeats
+  # Depending on the type, other values may be included. See lib/flagger.js for what can be configured.
+keyTwo:
+  # ...
+```
+
+This configuration is merged with the default configuration, overriding fields that exist and adding fields that do not exist.
+
 #### Read and output JSON
 
 Note: Commands below require [jq](https://stedolan.github.io/jq/), but jq is just for pretty printing json. If you don't have jq installed, remove the trailing `| jq .`
@@ -38,3 +57,28 @@ cat examples/addis-ababa-20180202.csv | ./index.js ${flags}
 # or
 ./index.js --infile examples/addis-ababa-20180202.csv ${flags}
 ```
+
+#### Override the default configuration
+
+```
+./index.js --infile examples/addis-ababa-20180202.json --config tests/test-config.yml | jq .
+```
+
+#### Skip the 'N' and 'R' flags
+
+```
+./index.js --infile examples/addis-ababa-20180202.json --skip N R | jq .
+```
+
+#### Remove all errors
+
+```
+./index.js --infile examples/addis-ababa-20180202.json --remove E | jq .
+```
+
+#### Remove all flagged items
+
+```
+./index.js --infile examples/addis-ababa-20180202.json --remove-all
+```
+

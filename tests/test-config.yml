@@ -1,0 +1,8 @@
+errors:
+  flag: ERR
+zeroes:
+  flag: Z
+  type: exact
+  value: 0
+repeats:
+  groupBy: ['location']

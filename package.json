@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "main": "./index.js",
-    "test": "ava tests/*-test.js"
+    "test": "ava tests/*-test.js && echo '' && ./tests/integration.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,13 @@
   },
   "homepage": "https://github.com/openaq/openaq-quality-check#readme",
   "dependencies": {
+    "assert": "^1.4.1",
+    "csv-parse": "^2.0.4",
+    "csv-stringify": "^2.0.4",
     "joi": "^13.1.2",
+    "js-yaml": "^3.10.0",
+    "lodash": "^4.17.5",
+    "object-path": "^0.11.4",
     "yargs": "^11.0.0"
   },
   "devDependencies": {

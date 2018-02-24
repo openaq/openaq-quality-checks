@@ -1,0 +1,125 @@
+[
+  {
+    "location": "US Diplomatic Post: Addis Ababa School",
+    "parameter": "pm25",
+    "date": {
+      "utc": "2018-02-02T15:00:00.000Z",
+      "local": "2018-02-02T18:00:00+03:00"
+    },
+    "value": -1,
+    "coordinates": {
+      "latitude": 8.996519,
+      "longitude": 38.725433
+    },
+    "flags": [
+      {
+        "flag": "N"
+      }
+    ]
+  },
+  {
+    "location": "US Diplomatic Post: Addis Ababa School",
+    "parameter": "pm25",
+    "date": {
+      "utc": "2018-02-02T16:00:00.000Z",
+      "local": "2018-02-02T19:00:00+03:00"
+    },
+    "value": -999,
+    "coordinates": {
+      "latitude": 8.996519,
+      "longitude": 38.725433
+    },
+    "flags": [
+      {
+        "flag": "E"
+      },
+      {
+        "flag": "N"
+      }
+    ]
+  },
+  {
+    "location": "US Diplomatic Post: Addis Ababa School",
+    "parameter": "pm25",
+    "date": {
+      "utc": "2018-02-02T17:00:00.000Z",
+      "local": "2018-02-02T20:00:00+03:00"
+    },
+    "value": 0,
+    "coordinates": {
+      "latitude": 8.996519,
+      "longitude": 38.725433
+    }
+  },
+  {
+    "location": "US Diplomatic Post: Addis Ababa School",
+    "parameter": "pm25",
+    "date": {
+      "utc": "2018-02-02T20:00:00.000Z",
+      "local": "2018-02-02T23:00:00+03:00"
+    },
+    "value": -999,
+    "coordinates": {
+      "latitude": 8.996519,
+      "longitude": 38.725433
+    },
+    "flags": [
+      {
+        "flag": "E"
+      },
+      {
+        "flag": "N"
+      },
+      {
+        "flag": "R",
+        "sequenceNumber": 1
+      }
+    ]
+  },
+  {
+    "location": "US Diplomatic Post: Addis Ababa School",
+    "parameter": "pm25",
+    "date": {
+      "utc": "2018-02-03T00:00:00.000Z",
+      "local": "2018-02-03T03:00:00+03:00"
+    },
+    "value": -999,
+    "coordinates": {
+      "latitude": 8.996519,
+      "longitude": 38.725433
+    },
+    "flags": [
+      {
+        "flag": "E"
+      },
+      {
+        "flag": "N"
+      },
+      {
+        "flag": "R",
+        "sequenceNumber": 2
+      }
+    ]
+  },
+  {
+    "location": "US Diplomatic Post: Addis Ababa School",
+    "parameter": "pm25",
+    "date": {
+      "utc": "2018-02-03T00:00:00.000Z",
+      "local": "2018-02-03T03:00:00+03:00"
+    },
+    "value": -999,
+    "coordinates": {
+      "latitude": 1,
+      "longitude": 38.725433
+    },
+    "flags": [
+      {
+        "flag": "E"
+      },
+      {
+        "flag": "N"
+      }
+    ]
+  }
+]

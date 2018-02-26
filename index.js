@@ -2,11 +2,16 @@
 const _ = require('lodash');
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
+const path = require('path');
 const stringify = require('csv-stringify/lib/sync')
 const yaml = require('js-yaml');
 
-const defaultConfig = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'));
-const Flagger = require('./lib/flagger');
+const baseDir = process.cwd();
+const configFile = path.join(baseDir, 'config.yml');
+const flaggerFile = path.join(baseDir, 'lib/flagger.js');
+
+const defaultConfig = yaml.safeLoad(fs.readFileSync(configFile, 'utf8'));
+const Flagger = require(flaggerFile);
 
 // cat examples/simple.json | ./index.js
 // ./index.js --infile examples/simple.json

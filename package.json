@@ -1,5 +1,5 @@
 {
-  "name": "openaq-quality-checks",
+  "name": "openaq-quality-check",
   "version": "1.0.0",
   "description": "CLI for adding flags to OpenAQ data",
   "main": "index.js",

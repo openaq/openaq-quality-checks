@@ -30,6 +30,14 @@ const rangeFlaggerPropertiesWithGoodLimits = {
 };
 const repeatsFlaggerProperties = { ...commonProperties, type: 'repeats' };
 const data = [{value: 1}, {value: 0}, {value: 1}, {value: '1'}];
+const msmtData = data.map(d => {
+  const newD = {
+    measurement: {
+      nestedValue: d.value
+    }
+  };
+  return newD;
+});
 
 function testUndefinedFlags(t, data) {
   return data.forEach((d) => t.is(d.flags, undefined));
@@ -93,6 +101,13 @@ test('sets properties when valid', t => {
 test('flags values which match the value', t => {
   const flagger = new Flagger({ ...exactFlaggerProperties, value: 1 });
   const flaggedData = flagger.flag(data);
+  testUndefinedFlags(t, [flaggedData[1], flaggedData[3]]);
+  testFlags(t, [flaggedData[0], flaggedData[2]]);
+});
+
+test('can use a different value field', t => {
+  const flagger = new Flagger({ ...exactFlaggerProperties, value: 1, valueField: 'measurement.nestedValue' });
+  const flaggedData = flagger.flag(msmtData);
   testUndefinedFlags(t, [flaggedData[1], flaggedData[3]]);
   testFlags(t, [flaggedData[0], flaggedData[2]]);
 });
@@ -249,7 +264,7 @@ test('flags multiple sets of repeats, restarting sequenceNumber', t => {
       value: 2
     }
   ];
-  const flagger = new Flagger({...repeatsFlaggerProperties});
+  const flagger = new Flagger(repeatsFlaggerProperties);
   const flaggedData = flagger.flag(dataWithMulitipleRepeats);
   const expectedFlag = {flag: 'F'};
   flaggedData.forEach((datum, idx) => {
@@ -389,4 +404,21 @@ test('flag repeats using configured nested grouped by', t => {
     });
   });
   testUndefinedFlags(t, [flaggedData[2]]);
+});
+
+test('flags nested repeats', t => {
+  let nestedRepeats = [...msmtData];
+  nestedRepeats[1].measurement.nestedValue = 1;
+  const flagger = new Flagger({
+    ...repeatsFlaggerProperties,
+    valueField: 'measurement.nestedValue'
+  });
+  const flaggedData = flagger.flag(nestedRepeats);
+  flaggedData.slice(0,3).forEach((datum, idx) => {
+    t.deepEqual(datum, {
+      ...nestedRepeats[idx],
+      flags: [{flag: 'F', sequenceNumber: idx+1}]
+    });
+  });
+  testUndefinedFlags(t, [flaggedData[3]]);
 });

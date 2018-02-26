@@ -59,10 +59,7 @@ function parseData(data) {
   if (argv['input-format'] === 'csv') {
     parsedData = parse(data, {columns: true, auto_parse: true});
   } else {
-    // TODO(aimee): Assumption about schema here should be flexible - that JSON
-    // data is nested under 'results' is an assumption we're interpreting data
-    // from the API.
-    parsedData = JSON.parse(data).results;
+    parsedData = JSON.parse(data);
   }
   return parsedData;  
 }

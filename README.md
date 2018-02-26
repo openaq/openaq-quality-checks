@@ -9,6 +9,7 @@ Have an OpenAQ data quality concern or experience you would like to share? Pleas
 ### Prerequisits
 
 * [node, npm, nvm](https://docs.npmjs.com/getting-started/installing-node)
+* [jq](https://stedolan.github.io/jq/) is recommended if using json.
 
 ### Setup
 
@@ -19,6 +20,8 @@ yarn test
 ```
 
 ### Example Usage
+
+openaq-quality-checks expects a list of items, either in json or csv.
 
 A set of default flags are configured in [`config.yml`](config.yml). The default flags are:
 
@@ -82,3 +85,8 @@ cat examples/addis-ababa-20180202.csv | ./index.js ${flags}
 ./index.js --infile examples/addis-ababa-20180202.json --remove-all
 ```
 
+#### Using the API call
+
+```
+curl 'https://api.openaq.org/v1/measurements?location=US%20Diplomatic%20Post:%20Addis%20Ababa%20School&date_from=2018-02-02&date_to=2018-02-06&limit=10' | jq '.results' | ./index.js | jq .
+```

@@ -2,7 +2,6 @@
 const assert = require('assert');
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
-const path = require('path');
 const cp = require('child_process');
 
 const jsonTestFilename = 'examples/addis-ababa-20180202.json';

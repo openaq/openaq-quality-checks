@@ -6,19 +6,31 @@ Have an OpenAQ data quality concern or experience you would like to share? Pleas
 
 ## Use
 
-### Prerequisits
+### Prerequisites
 
 * [node, npm, nvm](https://docs.npmjs.com/getting-started/installing-node)
+* [jq](https://stedolan.github.io/jq/) is recommended if using json.
 
-### Setup
+### Install
+
+```
+nvm use 8.9.4
+npm install openaq-quality-checker -g
+```
+
+### Develop
 
 ```bash
+git clone https://github.com/openaq/openaq-quality-checks
+cd openaq-quality-checks
 nvm use
 yarn install
 yarn test
 ```
 
-### Example Usage
+### Configuration
+
+openaq-quality-checks expects a list of items, either in json or csv.
 
 A set of default flags are configured in [`config.yml`](config.yml). The default flags are:
 
@@ -39,46 +51,52 @@ keyTwo:
 
 This configuration is merged with the default configuration, overriding fields that exist and adding fields that do not exist.
 
+### Example Commands
+
 #### Read and output JSON
 
 Note: Commands below require [jq](https://stedolan.github.io/jq/), but jq is just for pretty printing json. If you don't have jq installed, remove the trailing `| jq .`
 
 ```bash
-cat examples/addis-ababa-20180202.json | ./index.js | jq .
+cat examples/addis-ababa-20180202.json | quality-check | jq .
 # or
-./index.js --infile examples/addis-ababa-20180202.json | jq .
+quality-check --infile examples/addis-ababa-20180202.json | jq .
 ```
 
 #### Read and output CSV
 
 ```bash
-export flags='--input-format csv --output-format csv'
-cat examples/addis-ababa-20180202.csv | ./index.js ${flags}
+cat examples/addis-ababa-20180202.csv | quality-check --input-format csv --output-format csv
 # or
-./index.js --infile examples/addis-ababa-20180202.csv ${flags}
+quality-check --infile examples/addis-ababa-20180202.csv --input-format csv --output-format csv
 ```
 
 #### Override the default configuration
 
 ```
-./index.js --infile examples/addis-ababa-20180202.json --config tests/test-config.yml | jq .
+quality-check --infile examples/addis-ababa-20180202.json --config tests/test-config.yml | jq .
 ```
 
 #### Skip the 'N' and 'R' flags
 
 ```
-./index.js --infile examples/addis-ababa-20180202.json --skip N R | jq .
+quality-check --infile examples/addis-ababa-20180202.json --skip N R | jq .
 ```
 
 #### Remove all errors
 
 ```
-./index.js --infile examples/addis-ababa-20180202.json --remove E | jq .
+quality-check --infile examples/addis-ababa-20180202.json --remove E | jq .
 ```
 
 #### Remove all flagged items
 
 ```
-./index.js --infile examples/addis-ababa-20180202.json --remove-all
+quality-check --infile examples/addis-ababa-20180202.json --remove-all | jq .
 ```
 
+#### Using the API call
+
+```
+curl 'https://api.openaq.org/v1/measurements?location=US%20Diplomatic%20Post:%20Addis%20Ababa%20School&date_from=2018-02-02&date_to=2018-02-06&limit=10' | jq '.results' | quality-check | jq .
+```

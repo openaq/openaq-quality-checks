@@ -1,11 +1,15 @@
 {
-  "name": "openaq-quality-checks",
+  "name": "openaq-quality-checker",
   "version": "1.0.0",
   "description": "CLI for adding flags to OpenAQ data",
   "main": "index.js",
   "scripts": {
     "main": "./index.js",
     "test": "ava tests/*-test.js && echo '' && ./tests/integration.js"
+  },
+  "preferGlobal": true,
+  "bin": {
+    "quality-check": "./index.js"
   },
   "repository": {
     "type": "git",

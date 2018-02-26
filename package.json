@@ -7,6 +7,10 @@
     "main": "./index.js",
     "test": "ava tests/*-test.js && echo '' && ./tests/integration.js"
   },
+  "preferGlobal": true,
+  "bin": {
+    "quality-check": "./index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/openaq/openaq-quality-check.git"

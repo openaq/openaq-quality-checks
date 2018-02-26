@@ -11,7 +11,14 @@ Have an OpenAQ data quality concern or experience you would like to share? Pleas
 * [node, npm, nvm](https://docs.npmjs.com/getting-started/installing-node)
 * [jq](https://stedolan.github.io/jq/) is recommended if using json.
 
-### Setup
+### Installation
+
+```
+nvm use 8.9.4
+npm install openaq-quality-checker -g
+```
+
+### Development
 
 ```bash
 nvm use

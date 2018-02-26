@@ -6,27 +6,29 @@ Have an OpenAQ data quality concern or experience you would like to share? Pleas
 
 ## Use
 
-### Prerequisits
+### Prerequisites
 
 * [node, npm, nvm](https://docs.npmjs.com/getting-started/installing-node)
 * [jq](https://stedolan.github.io/jq/) is recommended if using json.
 
-### Installation
+### Install
 
 ```
 nvm use 8.9.4
 npm install openaq-quality-checker -g
 ```
 
-### Development
+### Develop
 
 ```bash
+git clone https://github.com/openaq/openaq-quality-checks
+cd openaq-quality-checks
 nvm use
 yarn install
 yarn test
 ```
 
-### Example Usage
+### Configuration
 
 openaq-quality-checks expects a list of items, either in json or csv.
 
@@ -48,6 +50,8 @@ keyTwo:
 ```
 
 This configuration is merged with the default configuration, overriding fields that exist and adding fields that do not exist.
+
+### Example Commands
 
 #### Read and output JSON
 

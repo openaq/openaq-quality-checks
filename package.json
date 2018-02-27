@@ -1,6 +1,6 @@
 {
-  "name": "openaq-quality-checker",
-  "version": "1.0.0",
+  "name": "openaq-quality-check",
+  "version": "1.0.1",
   "description": "CLI for adding flags to OpenAQ data",
   "main": "index.js",
   "scripts": {
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openaq/openaq-quality-check.git"
+    "url": "git+https://github.com/openaq/openaq-quality-checks.git"
   },
   "author": "Aimee Barciauskas",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/openaq/openaq-quality-check/issues"
+    "url": "https://github.com/openaq/openaq-quality-checks/issues"
   },
-  "homepage": "https://github.com/openaq/openaq-quality-check#readme",
+  "homepage": "https://github.com/openaq/openaq-quality-checks#readme",
   "dependencies": {
     "assert": "^1.4.1",
     "csv-parse": "^2.0.4",

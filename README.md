@@ -15,7 +15,7 @@ Have an OpenAQ data quality concern or experience you would like to share? Pleas
 
 ```
 nvm use 8.9.4
-npm install openaq-quality-checker -g
+npm install openaq-quality-check -g
 ```
 
 ### Develop

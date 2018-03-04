@@ -126,7 +126,7 @@ quality-check --infile examples/addis-ababa-20180202.json --skip N,R | jq .
 #### Remove all errors
 
 ```
-quality-check --infile examples/addis-ababa-20180202.json --remove E,N,R | jq .
+quality-check --infile examples/addis-ababa-20180202.json --remove E | jq .
 ```
 
 #### Remove all flagged items

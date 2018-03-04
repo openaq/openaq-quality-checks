@@ -32,13 +32,19 @@ yarn test
 
 openaq-quality-checks expects a list of items, either in json or csv.
 
+There are 2 modes of configuration: **config file** and **command line arguments**.
+
+#### 1. Config File
+
+The config file configures the flags. It defines which checks should be run, what values should be flagged, and what string to use for each flag.
+
 A set of default flags are configured in [`config.yml`](config.yml). The default flags are:
 
 * **`E`** flags the value -999
 * **`N`** flags negative values
 * **`R`** flags repeating values, grouped by coordinates and ordered by date.
 
-This configuration can be overriden using the `--config <file.yml>` argument, which should point to a yml file which has the following structure:
+This default config file can be overriden using the `--config <file.yml>` argument, which should point to a yml file which has the following structure:
 
 ```yaml
 keyOne: # Arbitrary identifier for the flag, e.g. 'errors'. Useful for merging with the default configuration.
@@ -50,6 +56,40 @@ keyTwo:
 ```
 
 This configuration is merged with the default configuration, overriding fields that exist and adding fields that do not exist.
+
+#### 2. Commmand Line Arguments
+
+Command line arguments configure
+
+* data input (defaults to STDIN)
+* input and output data format (defaults to json)
+* flags to skip (defaults to none), and,
+* which flags should be used to remove data from the output (default none).
+
+```bash
+$ quality-check --help
+Usage: index.js [options]
+
+Options:
+  --version         Show version number                                [boolean]
+  --infile          Input file. Should be the same format as input-format (which
+                    default to json).
+  --input-format    Input format, can be csv or json. Defaults to json.
+  --ouptput-format  Output format, can be csv or json. Defaults to json.
+  --skip            Comma-separated list of flags to skip.
+  --remove          Comma-separated list of flags to use in removing data from
+                    output.
+  --remove-all      Removes all flagged data.
+  --config          Config file to override default config.
+  -h, --help        Show help                                          [boolean]
+
+Examples:
+  index.js --infile foo.json  Flags the contents of a file and writes to stdout.
+  cat foo.json | index.js     Flags the contents of stdin and writes to stdout.
+
+copyright 2018
+
+```
 
 ### Example Commands
 
@@ -80,7 +120,7 @@ quality-check --infile examples/addis-ababa-20180202.json --config tests/test-co
 #### Skip the 'N' and 'R' flags
 
 ```
-quality-check --infile examples/addis-ababa-20180202.json --skip N R | jq .
+quality-check --infile examples/addis-ababa-20180202.json --skip N,R | jq .
 ```
 
 #### Remove all errors

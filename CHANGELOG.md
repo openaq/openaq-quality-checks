@@ -2,7 +2,7 @@
 
 ## 1.1.1
 
-* Add `includes` configuration option. Defaults to `true`. When `includes: 'false'` in a config file, values _not_ in a set of values will be flagged for a `set` flagger.
+* "Whitelisting": Add `includes` configuration option. Defaults to `true`. When `includes: 'false'` in a config file, values _not_ in a set of values will be flagged for a `set` flagger. This enables a "whitelisting" where anything _not_ in the whitelist of `values` is flagged.
 
 ## 1.1.0
 

@@ -143,7 +143,7 @@ curl 'https://api.openaq.org/v1/measurements?location=US%20Diplomatic%20Post:%20
 
 #### Using a different data source
 
-The tool was built with OpenAQ in mind but also to be flexible to other data sources. For example, if you want to analyze aggregated world news using [reddit's worldnews subreddit](https://www.reddit.com/r/worldnews/), you might want to flag posts from unknown news organization.
+The tool was built with OpenAQ in mind but also to be flexible to other data sources. For example, if you want to analyze aggregated world news using [reddit's worldnews subreddit](https://www.reddit.com/r/worldnews/), you might want to flag posts from unknown news organizations.
 
 Using a config like the one in [`examples/worldnews-config.yml`](./examples/worldnews-config.yml), e.g.:
 

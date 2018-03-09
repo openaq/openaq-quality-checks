@@ -140,3 +140,28 @@ quality-check --infile examples/addis-ababa-20180202.json --remove-all | jq .
 ```
 curl 'https://api.openaq.org/v1/measurements?location=US%20Diplomatic%20Post:%20Addis%20Ababa%20School&date_from=2018-02-02&date_to=2018-02-06&limit=10' | jq '.results' | quality-check | jq .
 ```
+
+#### Using a different data source
+
+The tool was built with OpenAQ in mind but also to be flexible to other data sources. For example, if you want to analyze aggregated world news using [reddit's worldnews subreddit](https://www.reddit.com/r/worldnews/), you might want to flag posts from unknown news organizations.
+
+Using a config like the one in [`examples/worldnews-config.yml`](./examples/worldnews-config.yml), e.g.:
+
+```yaml
+# examples/worldnews-config.yml
+unknown_sources:
+  flag: UKNOWN_SOURCE
+  type: set
+  values: ["theguardian.com", "bbc.co.uk", "bloomberg.com", "bbc.com", "reuters.com", "npr.org", "independent.co.uk", "cnn.com"]
+  includes: 'false'
+  valueField: 'data.domain'
+```
+
+We can flag all unknown news organizations:
+
+```
+echo $(curl -H "User-Agent: laptopterminal" https://www.reddit.com/r/worldnews.json?limit=50) | \
+  jq '.data.children' | \
+  quality-check --config examples/worldnews-config.yml | \
+  jq '.'
+```

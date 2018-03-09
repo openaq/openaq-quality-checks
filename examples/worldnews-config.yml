@@ -1,0 +1,6 @@
+unknown_sources:
+  flag: UKNOWN_SOURCE
+  type: set
+  values: ["theguardian.com", "bbc.co.uk", "bloomberg.com", "bbc.com", "reuters.com", "npr.org", "independent.co.uk", "cnn.com"]
+  includes: 'false'
+  valueField: 'data.domain'

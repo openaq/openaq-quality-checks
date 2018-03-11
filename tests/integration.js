@@ -14,7 +14,7 @@ const csvParseOpts = {columns: true, auto_parse: true, skip_empty_lines: true};
 
 console.log('Starting integration tests...');
 
-const testCommand = function(child, cb) {
+const testCommand = function (child, cb) {
   let data = '';
 
   child.stdout.on('data', chunk => {
@@ -31,49 +31,49 @@ const testCommand = function(child, cb) {
 const jsonArgs = ['--infile', jsonTestFilename];
 const csvArgs = ['--infile', csvTestFilename, '--input-format', 'csv'];
 
-const testReadsAndOutputsJSON = function() {
+const testReadsAndOutputsJSON = function () {
   const child = cp.spawn('./index.js', jsonArgs);
 
   testCommand(child, data => {
     const results = JSON.parse(data);
     const testResult = assert.deepEqual(results, expectedResults);
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Reads and outputs JSON.')
-    };
+      console.log('\u2714 Successful: Reads and outputs JSON.');
+    }
   });
 };
 
-const testReadsCSVAndOutputsJSON = function() {
+const testReadsCSVAndOutputsJSON = function () {
   const child = cp.spawn('./index.js', csvArgs);
 
   testCommand(child, data => {
     const results = JSON.parse(data);
-    let testResult = undefined;
+    let testResult;
     results.forEach((result, idx) => {
-      assert.deepEqual(result.flags, [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
+      assert.deepEqual(result.flags, [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx + 1}]);
     });
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Reads CSV and outputs JSON.')
-    };
+      console.log('\u2714 Successful: Reads CSV and outputs JSON.');
+    }
   });
 };
 
-const testReadsAndOutputsCSV = function() {
+const testReadsAndOutputsCSV = function () {
   const child = cp.spawn('./index.js', [...csvArgs, '--output-format', 'csv']);
 
   testCommand(child, data => {
     const results = parse(data, csvParseOpts);
-    let testResult = undefined;
+    let testResult;
     results.forEach((result, idx) => {
-      assert.deepEqual(JSON.parse(result.flags), [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
+      assert.deepEqual(JSON.parse(result.flags), [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx + 1}]);
     });
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Reads and outputs CSV.')
-    };
+      console.log('\u2714 Successful: Reads and outputs CSV.');
+    }
   });
 };
 
-const testCanSkipFlags = function() {
+const testCanSkipFlags = function () {
   const child = cp.spawn('./index.js', [...jsonArgs, '--skip', 'R', 'N']);
 
   testCommand(child, data => {
@@ -85,46 +85,46 @@ const testCanSkipFlags = function() {
       }
     });
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Configurably skips flags.')
-    };
+      console.log('\u2714 Successful: Configurably skips flags.');
+    }
   });
-}
+};
 
-const testCanRemoveSomeFlaggedData = function() {
+const testCanRemoveSomeFlaggedData = function () {
   const child = cp.spawn('./index.js', [...jsonArgs, '--remove', 'E']);
 
   testCommand(child, data => {
     const results = JSON.parse(data);
     const testResult = assert.equal(results.length, 2);
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Can remove some flagged data.')
-    };
+      console.log('\u2714 Successful: Can remove some flagged data.');
+    }
   });
-}
+};
 
-const testCanRemoveAllFlaggedData = function() {
+const testCanRemoveAllFlaggedData = function () {
   const child = cp.spawn('./index.js', [...jsonArgs, '--remove-all']);
 
   testCommand(child, data => {
     const results = JSON.parse(data);
     const testResult = assert.equal(results.length, 1);
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Can remove all flagged data.')
-    };
+      console.log('\u2714 Successful: Can remove all flagged data.');
+    }
   });
-}
+};
 
-const testCanOverrideFlagConfiguration = function() {
+const testCanOverrideFlagConfiguration = function () {
   const child = cp.spawn('./index.js', [...jsonArgs, '--config', 'tests/test-config.yml']);
 
   testCommand(child, data => {
     const results = JSON.parse(data);
     const testResult = assert.deepEqual(results, expectedConfiguredResults);
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Can override configuration.')
-    };
+      console.log('\u2714 Successful: Can override configuration.');
+    }
   });
-}
+};
 
 testReadsAndOutputsJSON();
 testReadsCSVAndOutputsJSON();

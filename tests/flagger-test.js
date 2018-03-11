@@ -149,7 +149,7 @@ test('requires a start value', t => {
 });
 
 test('requires an end value', t => {
-  const properties = { ...rangeFlaggerPropertiesWithEmptyLimits, start: {value: 1}};
+  const properties = { ...rangeFlaggerPropertiesWithEmptyLimits, start: {value: 1} };
   const error = t.throws(() => new Flagger(properties));
   t.is(error.name, 'ValidationError');
   t.is(error.message, 'child "end" fails because [child "value" fails because ["value" is required]]');
@@ -243,7 +243,6 @@ test('flags repeat values when repeated at least repeatMinimum times', t => {
   const dataWithMoreRepeats = [...dataWithRepeats.slice(0, 3), {value: 0}];
   const flagger = new Flagger({...repeatsFlaggerProperties, repeatMinimum: 3});
   const flaggedData = flagger.flag(dataWithMoreRepeats);
-  const expectedFlag = {flag: 'F'};
   testUndefinedFlags(t, [flaggedData[0]]);
   testFlags(t, flaggedData.slice(1, 4), {flag: 'F', withSequence: true});
 });

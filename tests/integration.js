@@ -73,8 +73,8 @@ const testReadsAndOutputsCSV = function () {
   });
 };
 
-const testCanSkipFlags = function () {
-  const child = cp.spawn('./index.js', [...jsonArgs, '--skip', 'R', 'N']);
+const testCanSkipFlags = function() {
+  const child = cp.spawn('./index.js', [...jsonArgs, '--skip', 'R,N']);
 
   testCommand(child, data => {
     const results = JSON.parse(data);

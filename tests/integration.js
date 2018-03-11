@@ -14,7 +14,7 @@ const csvParseOpts = {columns: true, auto_parse: true, skip_empty_lines: true};
 
 console.log('Starting integration tests...');
 
-const testCommand = function (child, cb) {
+const testCommand = function(child, cb) {
   let data = '';
 
   child.stdout.on('data', chunk => {
@@ -31,7 +31,7 @@ const testCommand = function (child, cb) {
 const jsonArgs = ['--infile', jsonTestFilename];
 const csvArgs = ['--infile', csvTestFilename, '--input-format', 'csv'];
 
-const testReadsAndOutputsJSON = function () {
+const testReadsAndOutputsJSON = function() {
   const child = cp.spawn('./index.js', jsonArgs);
 
   testCommand(child, data => {
@@ -43,7 +43,7 @@ const testReadsAndOutputsJSON = function () {
   });
 };
 
-const testReadsCSVAndOutputsJSON = function () {
+const testReadsCSVAndOutputsJSON = function() {
   const child = cp.spawn('./index.js', csvArgs);
 
   testCommand(child, data => {
@@ -58,7 +58,7 @@ const testReadsCSVAndOutputsJSON = function () {
   });
 };
 
-const testReadsAndOutputsCSV = function () {
+const testReadsAndOutputsCSV = function() {
   const child = cp.spawn('./index.js', [...csvArgs, '--output-format', 'csv']);
 
   testCommand(child, data => {
@@ -90,7 +90,7 @@ const testCanSkipFlags = function() {
   });
 };
 
-const testCanRemoveSomeFlaggedData = function () {
+const testCanRemoveSomeFlaggedData = function() {
   const child = cp.spawn('./index.js', [...jsonArgs, '--remove', 'E']);
 
   testCommand(child, data => {
@@ -102,7 +102,7 @@ const testCanRemoveSomeFlaggedData = function () {
   });
 };
 
-const testCanRemoveAllFlaggedData = function () {
+const testCanRemoveAllFlaggedData = function() {
   const child = cp.spawn('./index.js', [...jsonArgs, '--remove-all']);
 
   testCommand(child, data => {
@@ -114,7 +114,7 @@ const testCanRemoveAllFlaggedData = function () {
   });
 };
 
-const testCanOverrideFlagConfiguration = function () {
+const testCanOverrideFlagConfiguration = function() {
   const child = cp.spawn('./index.js', [...jsonArgs, '--config', 'tests/test-config.yml']);
 
   testCommand(child, data => {

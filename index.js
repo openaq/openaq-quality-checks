@@ -36,7 +36,7 @@ let config = {...defaultConfig};
 
 function customizer(objValue, srcValue) {
   if (_.isArray(objValue)) {
-    return objValue = srcValue;
+    return objValue = srcValue; /* eslint no-return-assign: "off" */
   }
 }
 

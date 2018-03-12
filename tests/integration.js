@@ -38,8 +38,8 @@ const testReadsAndOutputsJSON = function() {
     const results = JSON.parse(data);
     const testResult = assert.deepEqual(results, expectedResults);
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Reads and outputs JSON.')
-    };
+      console.log('\u2714 Successful: Reads and outputs JSON.');
+    }
   });
 };
 
@@ -48,13 +48,13 @@ const testReadsCSVAndOutputsJSON = function() {
 
   testCommand(child, data => {
     const results = JSON.parse(data);
-    let testResult = undefined;
+    let testResult;
     results.forEach((result, idx) => {
-      assert.deepEqual(result.flags, [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
+      assert.deepEqual(result.flags, [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx + 1}]);
     });
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Reads CSV and outputs JSON.')
-    };
+      console.log('\u2714 Successful: Reads CSV and outputs JSON.');
+    }
   });
 };
 
@@ -63,13 +63,13 @@ const testReadsAndOutputsCSV = function() {
 
   testCommand(child, data => {
     const results = parse(data, csvParseOpts);
-    let testResult = undefined;
+    let testResult;
     results.forEach((result, idx) => {
-      assert.deepEqual(JSON.parse(result.flags), [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx+1}]);
+      assert.deepEqual(JSON.parse(result.flags), [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx + 1}]);
     });
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Reads and outputs CSV.')
-    };
+      console.log('\u2714 Successful: Reads and outputs CSV.');
+    }
   });
 };
 
@@ -85,10 +85,10 @@ const testCanSkipFlags = function() {
       }
     });
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Configurably skips flags.')
-    };
+      console.log('\u2714 Successful: Configurably skips flags.');
+    }
   });
-}
+};
 
 const testCanRemoveSomeFlaggedData = function() {
   const child = cp.spawn('./index.js', [...jsonArgs, '--remove', 'E']);
@@ -97,10 +97,10 @@ const testCanRemoveSomeFlaggedData = function() {
     const results = JSON.parse(data);
     const testResult = assert.equal(results.length, 2);
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Can remove some flagged data.')
-    };
+      console.log('\u2714 Successful: Can remove some flagged data.');
+    }
   });
-}
+};
 
 const testCanRemoveAllFlaggedData = function() {
   const child = cp.spawn('./index.js', [...jsonArgs, '--remove-all']);
@@ -109,10 +109,10 @@ const testCanRemoveAllFlaggedData = function() {
     const results = JSON.parse(data);
     const testResult = assert.equal(results.length, 1);
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Can remove all flagged data.')
-    };
+      console.log('\u2714 Successful: Can remove all flagged data.');
+    }
   });
-}
+};
 
 const testCanOverrideFlagConfiguration = function() {
   const child = cp.spawn('./index.js', [...jsonArgs, '--config', 'tests/test-config.yml']);
@@ -121,10 +121,10 @@ const testCanOverrideFlagConfiguration = function() {
     const results = JSON.parse(data);
     const testResult = assert.deepEqual(results, expectedConfiguredResults);
     if (testResult === undefined) {
-      console.log('\u2714 Successful: Can override configuration.')
-    };
+      console.log('\u2714 Successful: Can override configuration.');
+    }
   });
-}
+};
 
 testReadsAndOutputsJSON();
 testReadsCSVAndOutputsJSON();

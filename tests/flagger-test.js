@@ -5,7 +5,7 @@ const commonProperties = {flag: 'F'};
 const exactFlaggerProperties = { ...commonProperties, type: 'exact' };
 const setFlaggerProperties = { ...commonProperties, type: 'set' };
 const rangeFlaggerProperties = { ...commonProperties, type: 'range' };
-const rangeFlaggerPropertiesWithEmptyLimits = { 
+const rangeFlaggerPropertiesWithEmptyLimits = {
   ...rangeFlaggerProperties,
   start: {},
   end: {}
@@ -48,7 +48,7 @@ function testFlags(t, flaggedData, opts = {flag: 'F', withSequence: false}) {
     t.is(d.flags[0].flag, opts.flag);
     if (opts.withSequence) t.is(d.flags[0].sequenceNumber, idx + 1);
   });
-};
+}
 
 // describe 'flagger#init'
 test('requires a flag property', t => {
@@ -131,7 +131,7 @@ test('flags values which match any of the set', t => {
   const flagger = new Flagger({ ...setFlaggerProperties, values: [1, '1'] });
   const flaggedData = flagger.flag(data);
   testUndefinedFlags(t, [flaggedData[1]]);
-  testFlags(t, [flaggedData[0], ...flaggedData.slice(2,4)]);
+  testFlags(t, [flaggedData[0], ...flaggedData.slice(2, 4)]);
 });
 
 // describe 'range' type
@@ -149,7 +149,7 @@ test('requires a start value', t => {
 });
 
 test('requires an end value', t => {
-  const properties = { ...rangeFlaggerPropertiesWithEmptyLimits, start: {value: 1}};
+  const properties = { ...rangeFlaggerPropertiesWithEmptyLimits, start: {value: 1} };
   const error = t.throws(() => new Flagger(properties));
   t.is(error.name, 'ValidationError');
   t.is(error.message, 'child "end" fails because [child "value" fails because ["value" is required]]');
@@ -165,7 +165,7 @@ test('raises an error if the end object is less than the start object', t => {
 test('flags values inclusively by default', t => {
   const flagger = new Flagger(rangeFlaggerPropertiesWithGoodLimits);
   const flaggedData = flagger.flag(data);
-  testFlags(t, flaggedData.slice(0,3));
+  testFlags(t, flaggedData.slice(0, 3));
   testUndefinedFlags(t, [flaggedData[3]]);
 });
 
@@ -176,7 +176,7 @@ test('flags values exclusively using the end endpoint', t => {
       value: 1,
       exclusive: true // don't flag 1's
     }
-  }
+  };
   const flagger = new Flagger(properties);
   const flaggedData = flagger.flag(data);
   testFlags(t, [flaggedData[1]]);
@@ -190,7 +190,7 @@ test('flags values exclusively using the start endpoint', t => {
       value: 0,
       exclusive: true // don't flag 0's
     }
-  }
+  };
   const flagger = new Flagger(properties);
   const flaggedData = flagger.flag(data);
   testFlags(t, [flaggedData[0], flaggedData[2]]);
@@ -200,20 +200,20 @@ test('flags values exclusively using the start endpoint', t => {
 test('flags values less than end if no start is given', t => {
   const properties = {...rangeFlaggerPropertiesWithGoodLimits};
   delete properties['start'];
-  const dataWithNegatives = [...data, {value: -1}]
+  const dataWithNegatives = [...data, {value: -1}];
   const flagger = new Flagger(properties);
-  const flaggedData = flagger.flag(dataWithNegatives); 
-  testFlags(t, [...flaggedData.slice(0,3), flaggedData[4]]);
+  const flaggedData = flagger.flag(dataWithNegatives);
+  testFlags(t, [...flaggedData.slice(0, 3), flaggedData[4]]);
   testUndefinedFlags(t, [flaggedData[3]]);
 });
 
 test('flags values less than end if no start is given', t => {
   const properties = {...rangeFlaggerPropertiesWithGoodLimits};
   delete properties['end'];
-  const dataWithMorePositives = [...data, {value: 2}]
+  const dataWithMorePositives = [...data, {value: 2}];
   const flagger = new Flagger(properties);
-  const flaggedData = flagger.flag(dataWithMorePositives); 
-  testFlags(t, [...flaggedData.slice(0,3), flaggedData[4]]);
+  const flaggedData = flagger.flag(dataWithMorePositives);
+  testFlags(t, [...flaggedData.slice(0, 3), flaggedData[4]]);
   testUndefinedFlags(t, [flaggedData[3]]);
 });
 
@@ -221,7 +221,7 @@ test('flags values less than end if no start is given', t => {
 test('throws an error if repeatMinimum is not a number', t => {
   const error = t.throws(() => new Flagger({...repeatsFlaggerProperties, repeatMinimum: 0}));
   t.is(error.name, 'ValidationError');
-  t.is(error.message, 'child "repeatMinimum" fails because ["repeatMinimum" must be a positive number]')
+  t.is(error.message, 'child "repeatMinimum" fails because ["repeatMinimum" must be a positive number]');
 });
 
 const dataWithRepeats = [{value: 1}, {value: 0}, {value: 0}, {value: '1'}];
@@ -230,7 +230,7 @@ test('flags repeat values', t => {
   const flagger = new Flagger(repeatsFlaggerProperties);
   const flaggedData = flagger.flag(dataWithRepeats);
   testUndefinedFlags(t, [flaggedData[0], flaggedData[3]]);
-  testFlags(t, flaggedData.slice(1,3), {flag: 'F', withSequence: true});
+  testFlags(t, flaggedData.slice(1, 3), {flag: 'F', withSequence: true});
 });
 
 test('does not flag repeat values when repeated less than repeatMinimum times', t => {
@@ -240,12 +240,11 @@ test('does not flag repeat values when repeated less than repeatMinimum times', 
 });
 
 test('flags repeat values when repeated at least repeatMinimum times', t => {
-  const dataWithMoreRepeats = [...dataWithRepeats.slice(0,3), {value: 0}];
+  const dataWithMoreRepeats = [...dataWithRepeats.slice(0, 3), {value: 0}];
   const flagger = new Flagger({...repeatsFlaggerProperties, repeatMinimum: 3});
   const flaggedData = flagger.flag(dataWithMoreRepeats);
-  const expectedFlag = {flag: 'F'};
   testUndefinedFlags(t, [flaggedData[0]]);
-  testFlags(t, flaggedData.slice(1,4), {flag: 'F', withSequence: true});
+  testFlags(t, flaggedData.slice(1, 4), {flag: 'F', withSequence: true});
 });
 
 test('flags multiple sets of repeats, restarting sequenceNumber', t => {
@@ -269,12 +268,12 @@ test('flags multiple sets of repeats, restarting sequenceNumber', t => {
   const expectedFlag = {flag: 'F'};
   flaggedData.forEach((datum, idx) => {
     t.deepEqual(datum, {
-      id: idx+2,
+      id: idx + 2,
       value: dataWithMulitipleRepeats[idx].value,
       flags: [
         {
           ...expectedFlag,
-          sequenceNumber: Math.floor(idx%2)+1
+          sequenceNumber: Math.floor(idx % 2) + 1
         }
       ]
     });
@@ -339,7 +338,7 @@ test('flag repeats using configured grouped and ordered by', t => {
       flags: [
         {
           ...expectedFlag,
-          sequenceNumber: Math.floor(idx%2)+1
+          sequenceNumber: Math.floor(idx % 2) + 1
         }
       ]
     });
@@ -391,14 +390,14 @@ test('flag repeats using configured nested grouped by', t => {
   });
   const flaggedData = flagger.flag(dataWithNestedGroups);
   const expectedFlag = {flag: 'F'};
-  flaggedData.slice(0,2).forEach((datum, idx) => {
+  flaggedData.slice(0, 2).forEach((datum, idx) => {
     const expectedItemFields = dataWithNestedGroupsGroupedAndOrdered[idx];
     t.deepEqual(datum, {
       ...expectedItemFields,
       flags: [
         {
           ...expectedFlag,
-          sequenceNumber: Math.floor(idx%2)+1
+          sequenceNumber: Math.floor(idx % 2) + 1
         }
       ]
     });
@@ -414,10 +413,10 @@ test('flags nested repeats', t => {
     valueField: 'measurement.nestedValue'
   });
   const flaggedData = flagger.flag(nestedRepeats);
-  flaggedData.slice(0,3).forEach((datum, idx) => {
+  flaggedData.slice(0, 3).forEach((datum, idx) => {
     t.deepEqual(datum, {
       ...nestedRepeats[idx],
-      flags: [{flag: 'F', sequenceNumber: idx+1}]
+      flags: [{flag: 'F', sequenceNumber: idx + 1}]
     });
   });
   testUndefinedFlags(t, [flaggedData[3]]);

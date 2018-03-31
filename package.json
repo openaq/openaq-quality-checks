@@ -1,11 +1,12 @@
 {
   "name": "openaq-quality-checks",
-  "version": "1.0.2",
+  "version": "1.1.1",
   "description": "CLI for adding flags to OpenAQ data",
   "main": "index.js",
   "scripts": {
     "main": "./index.js",
-    "test": "ava tests/*-test.js && echo '' && ./tests/integration.js"
+    "test": "ava tests/*-test.js && echo '' && ./tests/integration.js",
+    "pretest": "eslint tests lib index.js"
   },
   "preferGlobal": true,
   "bin": {
@@ -32,6 +33,12 @@
     "yargs": "^11.0.0"
   },
   "devDependencies": {
-    "ava": "^0.25.0"
+    "ava": "^0.25.0",
+    "eslint": "^4.18.2",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1"
   }
 }

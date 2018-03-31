@@ -4,7 +4,7 @@
 const _ = require('lodash');
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
-const stringify = require('csv-stringify/lib/sync')
+const stringify = require('csv-stringify/lib/sync');
 const yaml = require('js-yaml');
 
 const Flagger = require(`${__dirname}/lib/flagger`);
@@ -13,37 +13,36 @@ const defaultConfig = yaml.safeLoad(fs.readFileSync(`${__dirname}/config.yml`, '
 // cat examples/simple.json | ./index.js
 // ./index.js --infile examples/simple.json
 const argv = require('yargs')
-    .usage('Usage: $0 [options]')
-    .example('$0 --infile foo.json', 'Flags the contents of a file and writes to stdout.')
-    .example('cat foo.json | $0', 'Flags the contents of stdin and writes to stdout.')
-    .nargs('--infile', 1)
-    .describe('infile', 'Input file. Should be the same format as input-format (which default to json).')
-    .nargs('--input-format', 1)
-    .describe('input-format', 'Input format, can be csv or json. Defaults to json.')
-    .nargs('--ouptput-format', 1)
-    .describe('ouptput-format', 'Output format, can be csv or json. Defaults to json.')
-    .array('--skip')
-    .describe('skip', 'Space-separated list of flags to skip.') 
-    .array('--remove')
-    .describe('remove', 'Space-separated list data to remove if flagged.')
-    .describe('config', 'Config file to override default config.')
-    .help('h')
-    .alias('h', 'help')
-    .epilog('copyright 2018')
-    .argv;
+  .usage('Usage: $0 [options]')
+  .example('$0 --infile foo.json', 'Flags the contents of a file and writes to stdout.')
+  .example('cat foo.json | $0', 'Flags the contents of stdin and writes to stdout.')
+  .nargs('--infile', 1)
+  .describe('infile', 'Input file. Should be the same format as input-format (which default to json).')
+  .nargs('--input-format', 1)
+  .describe('input-format', 'Input format, can be csv or json. Defaults to json.')
+  .nargs('--ouptput-format', 1)
+  .describe('ouptput-format', 'Output format, can be csv or json. Defaults to json.')
+  .describe('skip', 'Comma-separated list of flags to skip.')
+  .describe('remove', 'Comma-separated list of flags to use in removing data from output.')
+  .describe('remove-all', 'Removes all flagged data.')
+  .describe('config', 'Config file to override default config.')
+  .help('h')
+  .alias('h', 'help')
+  .epilog('copyright 2018')
+  .argv;
 
 let config = {...defaultConfig};
 
 function customizer(objValue, srcValue) {
   if (_.isArray(objValue)) {
-    return objValue = srcValue;
+    return objValue = srcValue; /* eslint no-return-assign: "off" */
   }
 }
 
 if (argv.config) {
   const overrides = yaml.safeLoad(fs.readFileSync(argv.config));
   config = _.mergeWith(config, overrides, customizer);
-};
+}
 
 function flagData(data) {
   let flaggedData = [...data];
@@ -54,7 +53,7 @@ function flagData(data) {
     }
   });
   return flaggedData;
-};
+}
 
 function parseData(data) {
   let parsedData;
@@ -63,7 +62,7 @@ function parseData(data) {
   } else {
     parsedData = JSON.parse(data);
   }
-  return parsedData;  
+  return parsedData;
 }
 
 function removeSomeFlaggedData(flaggedData) {

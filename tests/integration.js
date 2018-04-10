@@ -50,7 +50,7 @@ const testReadsCSVAndOutputsJSON = function() {
     const results = JSON.parse(data);
     let testResult;
     results.forEach((result, idx) => {
-      assert.deepEqual(result.flags, [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx + 1}]);
+      assert.deepEqual(result.flags, [{flag: 'MISSING'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx + 1}]);
     });
     if (testResult === undefined) {
       console.log('\u2714 Successful: Reads CSV and outputs JSON.');
@@ -65,7 +65,7 @@ const testReadsAndOutputsCSV = function() {
     const results = parse(data, csvParseOpts);
     let testResult;
     results.forEach((result, idx) => {
-      assert.deepEqual(JSON.parse(result.flags), [{flag: 'E'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx + 1}]);
+      assert.deepEqual(JSON.parse(result.flags), [{flag: 'MISSING'}, {flag: 'N'}, {flag: 'R', sequenceNumber: idx + 1}]);
     });
     if (testResult === undefined) {
       console.log('\u2714 Successful: Reads and outputs CSV.');
@@ -91,7 +91,7 @@ const testCanSkipFlags = function() {
 };
 
 const testCanRemoveSomeFlaggedData = function() {
-  const child = cp.spawn('./index.js', [...jsonArgs, '--remove', 'E']);
+  const child = cp.spawn('./index.js', [...jsonArgs, '--remove', 'MISSING']);
 
   testCommand(child, data => {
     const results = JSON.parse(data);

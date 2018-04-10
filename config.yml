@@ -1,13 +1,7 @@
 errors:
-  flag: E
+  flag: MISSING
   type: exact
   value: -999
-negatives:
-  flag: 'N'
-  type: range
-  end:
-    value: 0
-    exclusive: true
 repeats:
   flag: R
   type: repeats

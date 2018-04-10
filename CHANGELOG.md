@@ -2,7 +2,7 @@
 
 ## 1.1.3
 
-* Change flag for -999 from 'E' to 'MISSING' - change based on feedback from Aerodyne stakeholders that -999 represents missing data.
+* Change flag for -999 from 'E' to 'MISSING' based on feedback from Aerodyne stakeholders that -999 represents missing data.
 
 ## 1.1.2
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3
+
+* Change flag for -999 from 'E' to 'MISSING' based on feedback from Aerodyne stakeholders that -999 represents missing data.
+
 ## 1.1.2
 
 * Refactor `flagRepeats` to flag repeats without recursion which was overflowing the call stack, addressing https://github.com/openaq/openaq-quality-checks/issues/20.

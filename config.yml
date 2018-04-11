@@ -1,5 +1,5 @@
 errors:
-  flag: E
+  flag: MISSING
   type: exact
   value: -999
 negatives:

@@ -54,6 +54,8 @@ function flagData(data) {
       flaggedData = flagger.flag(flaggedData);
     }
   });
+  // start with each item having an empty flags array, so that csv headers work.
+  flaggedData.forEach(d => d.flags = d.flags || []);
   return flaggedData;
 }
 

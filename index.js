@@ -54,6 +54,10 @@ function flagData(data) {
       flaggedData = flagger.flag(flaggedData);
     }
   });
+  // Every item needs a flags array, so that csv output will contain all
+  // headers. Without an empty flags array, if the first row doesn't have flags
+  // no flags will be output since the flags column won't be unrecognized.
+  flaggedData.forEach(d => d.flags = d.flags || []);
   return flaggedData;
 }
 
